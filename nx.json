@@ -19,10 +19,18 @@
   },
   "release": {
     "version": {
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "npx nx run-many -t build",
+      "conventionalCommits": true
     },
     "git": {
       "commitMessage": "chore(mutates): publish  {version}"
+    },
+    "projects": ["libs/*"],
+    "changelog": {
+      "workspaceChangelog": {
+        "file": false,
+        "createRelease": "github"
+      }
     }
   },
   "plugins": [
