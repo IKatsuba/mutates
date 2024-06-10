@@ -20,7 +20,10 @@
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build",
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "generatorOptions": {
+        "skipLockFileUpdate": true
+      }
     },
     "git": {
       "commitMessage": "chore(mutates): publish  {version} [skip ci]"

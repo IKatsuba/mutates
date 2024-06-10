@@ -1,6 +1,6 @@
 {
   "name": "@mutates/core",
-  "version": "0.1.1",
+  "version": "0.0.0-development",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
