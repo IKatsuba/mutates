@@ -1,6 +1,19 @@
 {
   "name": "@mutates/angular",
   "version": "0.0.0-development",
+  "keywords": [
+    "typescript",
+    "ast",
+    "mutations",
+    "angular",
+    "schematics"
+  ],
+  "homepage": "https://github.com/IKatsuba/mutates",
+  "repository": "https://github.com/IKatsuba/mutates",
+  "license": "Apache-2.0",
+  "contributors": [
+    "Igor Katsuba <igor@katsuba.dev>"
+  ],
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -12,5 +25,11 @@
   },
   "peerDependencies": {
     "@angular-devkit/schematics": ">=18.0.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "authors": [
+    "Igor Katsuba <igor@katsuba.dev>"
+  ]
 }
