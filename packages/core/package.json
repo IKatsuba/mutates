@@ -1,0 +1,12 @@
+{
+  "name": "@mutates/core",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "minimatch": "9.0.3",
+    "ts-morph": "^22.0.0",
+    "tslib": "^2.3.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mutates/angular": ["packages/angular/src/index.ts"],
+      "@mutates/core": ["packages/core/src/index.ts"],
+      "@mutates/core/testing": ["packages/core/src/testing.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
