@@ -20,6 +20,9 @@
   "release": {
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
+    },
+    "git": {
+      "commitMessage": "chore(mutates): publish  {version}"
     }
   },
   "plugins": [
