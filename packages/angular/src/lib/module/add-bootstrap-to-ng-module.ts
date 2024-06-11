@@ -1,5 +1,7 @@
 import type { ClassDeclaration } from 'ts-morph';
 
+import { getDecorators } from '@mutates/core';
+
 import { pushToDecoratorArrayProperty } from '../helpers/push-to-decorator-array-property';
 
 export function addBootstrapToNgModule(
@@ -11,4 +13,6 @@ export function addBootstrapToNgModule(
     unique,
     forceToArray: true,
   });
+
+  getDecorators(classDeclaration, { name: 'NgModule' });
 }

@@ -1,14 +1,18 @@
-import type {
+import {
   ClassDeclaration,
   GetAccessorDeclarationStructure,
+  ObjectLiteralExpression,
   SetAccessorDeclarationStructure,
+  Structure,
 } from 'ts-morph';
-import { Structure } from 'ts-morph';
 
 import { coerceArray } from '../utils';
 
 export function addAccessors(
-  classes: ClassDeclaration | ClassDeclaration[],
+  classes:
+    | ClassDeclaration
+    | ObjectLiteralExpression
+    | Array<ClassDeclaration | ObjectLiteralExpression>,
   accessors:
     | Array<GetAccessorDeclarationStructure | SetAccessorDeclarationStructure>
     | GetAccessorDeclarationStructure

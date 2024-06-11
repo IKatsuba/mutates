@@ -1,36 +1,43 @@
-import { getClasses } from '../classes';
+import { ObjectLiteralExpression } from 'ts-morph';
+
 import { readFileSync } from '../fs/file-system';
 import { resetActiveProject, saveProject } from '../project';
 import { createSourceFile } from '../source-file';
 import { createTestingProject } from '../testing';
-import { addProperties } from './add-properties';
+import { getVariables } from '../variables';
+import { addObjectProperty } from './add-object-property';
 
-describe('addProperties', () => {
+describe('addObjectProperties', () => {
   beforeEach(() => {
     createTestingProject();
 
     createSourceFile(
       'some/path/file.ts',
       `
-class A {}
-class B {}
+const a = {};
 `,
     );
   });
 
   it('should add properties', () => {
-    addProperties(getClasses('some/path/file.ts', { name: 'B' }), {
-      name: 'test',
-      initializer: '3',
-    });
+    addObjectProperty(
+      getVariables('some/path/file.ts')
+        .at(0)
+        ?.getDeclarations()
+        .at(0)
+        ?.getInitializer() as ObjectLiteralExpression,
+      {
+        name: 'test',
+        initializer: '3',
+      },
+    );
 
     saveProject();
 
     expect(readFileSync('some/path/file.ts')).toBe(`
-class A {}
-class B {
-    test = 3;
-}
+const a = {
+    test: 3
+};
 `);
   });
 

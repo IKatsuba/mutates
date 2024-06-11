@@ -1,5 +1,7 @@
 import { FileSystemHost, Project, ProjectOptions } from 'ts-morph';
 
+import { Pattern } from '../utils';
+
 let prevProject: Project | null = null;
 
 function setActiveProject(project: Project | null): Project | null {
@@ -23,7 +25,7 @@ export function resetActiveProject(): Project | null {
 }
 
 export function createProject(
-  fileSystem: FileSystemHost,
+  fileSystem?: FileSystemHost,
   options?: Omit<ProjectOptions, 'fileSystem'>,
 ): Project {
   const project = new Project({ fileSystem, ...options });
@@ -39,4 +41,8 @@ export async function saveActiveProjectAsync(): Promise<void> {
 
 export function saveProject(): void {
   getActiveProject().saveSync();
+}
+
+export function addSourceFiles(paths: Pattern): void {
+  getActiveProject().addSourceFilesAtPaths(paths);
 }

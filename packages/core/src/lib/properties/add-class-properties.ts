@@ -2,7 +2,7 @@ import type { ClassDeclaration, OptionalKind, PropertyDeclarationStructure } fro
 
 import { coerceArray } from '../utils';
 
-export function addProperties(
+export function addClassProperties(
   classes: ClassDeclaration | ClassDeclaration[],
   properties:
     | Array<OptionalKind<PropertyDeclarationStructure>>

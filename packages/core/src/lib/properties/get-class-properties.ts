@@ -3,7 +3,7 @@ import { ClassDeclaration, PropertyDeclaration, PropertyDeclarationStructure } f
 import type { Query } from '../utils';
 import { coerceArray, matchQuery } from '../utils';
 
-export function getProperties<T extends ClassDeclaration>(
+export function getClassProperties<T extends ClassDeclaration>(
   classes: T | T[],
   query?: Query<PropertyDeclarationStructure>,
 ): Array<PropertyDeclaration> {

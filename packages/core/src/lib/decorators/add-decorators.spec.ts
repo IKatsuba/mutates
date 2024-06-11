@@ -5,7 +5,7 @@ import { readFileSync } from '../fs/file-system';
 import { getMethods } from '../methods';
 import { getParams } from '../params';
 import { resetActiveProject, saveProject } from '../project';
-import { getProperties } from '../properties';
+import { getClassProperties } from '../properties';
 import { createSourceFile } from '../source-file';
 import { createTestingProject } from '../testing';
 import { addDecorators } from './add-decorators';
@@ -40,7 +40,7 @@ class A {
       name: 'param',
     });
     const methodParams = getParams(methods);
-    const properties = getProperties(classes, { name: 'property' });
+    const properties = getClassProperties(classes, { name: 'property' });
     const getAccessorss = getAccessors(classes, { name: 'getAccessor' });
     const setAccessors = getAccessors(classes, { name: 'setAccessor' });
 

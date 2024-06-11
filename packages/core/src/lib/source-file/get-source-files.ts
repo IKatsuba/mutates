@@ -1,8 +1,9 @@
 import type { SourceFile } from 'ts-morph';
 
 import { getActiveProject } from '../project';
+import { Pattern } from '../utils';
 
-export function getSourceFiles(pattern?: string[] | string): SourceFile[] {
+export function getSourceFiles(pattern?: Pattern): SourceFile[] {
   return getActiveProject().getSourceFiles(pattern as string);
 }
 

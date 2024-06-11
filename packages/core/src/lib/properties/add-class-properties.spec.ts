@@ -1,13 +1,11 @@
-import { StructureKind } from 'ts-morph';
-
 import { getClasses } from '../classes';
 import { readFileSync } from '../fs/file-system';
 import { resetActiveProject, saveProject } from '../project';
 import { createSourceFile } from '../source-file';
 import { createTestingProject } from '../testing';
-import { addAccessors } from './add-accessors';
+import { addClassProperties } from './add-class-properties';
 
-describe('addAccessors', () => {
+describe('addClassProperties', () => {
   beforeEach(() => {
     createTestingProject();
 
@@ -15,26 +13,25 @@ describe('addAccessors', () => {
       'some/path/file.ts',
       `
 class A {}
-    `,
+class B {}
+`,
     );
   });
 
-  it('should add accessors to the class', async () => {
-    addAccessors(getClasses('some/path/file.ts'), [
-      {
-        name: 'setter',
-        kind: StructureKind.SetAccessor,
-      },
-    ]);
+  it('should add properties', () => {
+    addClassProperties(getClasses('some/path/file.ts', { name: 'B' }), {
+      name: 'test',
+      initializer: '3',
+    });
 
     saveProject();
 
     expect(readFileSync('some/path/file.ts')).toBe(`
-class A {
-    set setter() {
-    }
+class A {}
+class B {
+    test = 3;
 }
-    `);
+`);
   });
 
   afterEach(() => {

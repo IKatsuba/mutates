@@ -3,36 +3,42 @@ import { readFileSync } from '../fs/file-system';
 import { resetActiveProject, saveProject } from '../project';
 import { createSourceFile } from '../source-file';
 import { createTestingProject } from '../testing';
-import { editProperties } from './edit-properties';
-import { getProperties } from './get-properties';
+import { getClassProperties } from './get-class-properties';
+import { removeClassProperties } from './remove-class-properties';
 
-describe('editProperties', () => {
+describe('removeMethods', () => {
   beforeEach(() => {
     createTestingProject();
 
     createSourceFile(
       'some/path/file.ts',
       `
+class B {
+  test = 'test'
+}
+
 class A {
-  b = 0;
+  prop = 1;
 }
 `,
     );
   });
 
-  it('should edit properties', () => {
-    const declarations = getProperties(getClasses('some/path/file.ts'));
+  it('should remove methods', () => {
+    const declarations = getClassProperties(getClasses('some/path/file.ts', { name: 'B' }), {
+      name: 'test',
+    });
 
-    editProperties(declarations, () => ({
-      name: 'b',
-      initializer: "'s'",
-    }));
+    removeClassProperties(declarations);
 
     saveProject();
 
     expect(readFileSync('some/path/file.ts')).toBe(`
+class B {
+}
+
 class A {
-  b = 's';
+  prop = 1;
 }
 `);
   });
