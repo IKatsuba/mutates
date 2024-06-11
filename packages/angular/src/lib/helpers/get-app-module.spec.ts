@@ -5,7 +5,7 @@ import { createSourceFile } from '@mutates/core';
 
 import { createAngularProject } from '../create-angular-project';
 import { createTestingTree } from '../testing';
-import { getMainModule } from './get-main-module';
+import { getAppModule } from './get-app-module';
 
 describe('getMainModule', () => {
   let host: UnitTestTree;
@@ -45,7 +45,7 @@ export class AppModule {
   });
 
   it('should find the AppModule class', () => {
-    const classDeclaration = getMainModule('src/main.ts');
+    const classDeclaration = getAppModule('src/main.ts');
 
     expect(classDeclaration.getText()).toBe(`@NgModule()
 export class AppModule {

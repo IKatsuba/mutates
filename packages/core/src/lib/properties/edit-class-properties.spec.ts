@@ -1,3 +1,5 @@
+import { Node } from 'ts-morph';
+
 import { getClasses } from '../classes';
 import { readFileSync } from '../fs/file-system';
 import { resetActiveProject, saveProject } from '../project';

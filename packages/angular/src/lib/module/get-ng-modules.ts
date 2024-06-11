@@ -2,11 +2,13 @@ import type { ClassDeclaration } from 'ts-morph';
 
 import { getClasses, Pattern, Query, StructureType } from '@mutates/core';
 
-export function getNgComponents(
+export function getNgModule(
   pattern: Pattern,
   query?: Query<Omit<StructureType<ClassDeclaration>, 'kind'>>,
 ): ClassDeclaration[] {
-  return getClasses(pattern, query).filter(
-    (declaration) => !!declaration.getDecorator('Component'),
-  );
+  return getClasses(pattern, query).filter(isNgModule);
+}
+
+export function isNgModule(declaration: ClassDeclaration): boolean {
+  return !!declaration.getDecorator('NgModule');
 }

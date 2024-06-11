@@ -1,1 +1,1 @@
-export * from './add-provider-to-directive';
+export * from './get-directives';

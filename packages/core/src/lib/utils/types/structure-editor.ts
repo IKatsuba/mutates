@@ -9,4 +9,4 @@ export type StructureEditor<
     StructureType<Declaration>
   >,
   UpdatableData extends FilterPrimitive<Structure> = FilterPrimitive<Structure>,
-> = (structure: Structure, declaration: Declaration) => Partial<UpdatableData>;
+> = (structure: Structure, declaration: Declaration) => Partial<UpdatableData> | void;

@@ -5,7 +5,7 @@ import { createSourceFile } from '@mutates/core';
 
 import { createAngularProject } from '../create-angular-project';
 import { createTestingTree } from '../testing';
-import { getBootstrapFn } from './get-bootstrap-fn';
+import { getBootstrapModuleFn } from './get-bootstrap-module-fn';
 
 describe('getBootstrapFn', () => {
   let host: UnitTestTree;
@@ -32,7 +32,7 @@ platformBrowserDynamic()
   .catch(err => console.log(err));
 `,
     );
-    const bootstrapFn = getBootstrapFn('src/main.ts')!;
+    const bootstrapFn = getBootstrapModuleFn('src/main.ts')!;
 
     expect(bootstrapFn.getText()).toBe(`platformBrowserDynamic()
   .bootstrapModule(AppModule)`);
@@ -41,7 +41,7 @@ platformBrowserDynamic()
 
   it('should return undefined if bootstrap function is not found', () => {
     createSourceFile('src/main.ts', '');
-    const bootstrapFn = getBootstrapFn('src/main.ts');
+    const bootstrapFn = getBootstrapModuleFn('src/main.ts');
 
     expect(bootstrapFn).toBeUndefined();
   });

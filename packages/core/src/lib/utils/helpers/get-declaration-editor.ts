@@ -15,14 +15,15 @@ export function getDeclarationEditor<
     editor: StructureEditor<Declaration, OptionalKind<Structures>>,
   ) {
     coerceArray(declarations).forEach((declaration) => {
-      const newStructure = Object.assign(
-        {},
-        declaration.getStructure(),
-        // TODO: refactor it to support new typings
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        editor(declaration.getStructure(), declaration),
-      ) as Structures;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const result = editor(declaration.getStructure(), declaration);
+
+      if (!result) {
+        return;
+      }
+
+      const newStructure = Object.assign({}, declaration.getStructure(), result) as Structures;
 
       // todo: see https://github.com/dsherret/ts-morph/issues/882
       // if the issue is resolved code will be remove

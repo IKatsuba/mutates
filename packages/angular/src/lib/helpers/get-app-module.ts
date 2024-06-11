@@ -1,9 +1,9 @@
 import type { ClassDeclaration, Identifier } from 'ts-morph';
 
-import { getBootstrapFn } from '../bootstrap';
+import { getBootstrapModuleFn } from '../bootstrap';
 
-export function getMainModule(mainFilePath: string): ClassDeclaration {
-  const bootstrapFn = getBootstrapFn(mainFilePath);
+export function getAppModule(mainFilePath: string): ClassDeclaration {
+  const bootstrapFn = getBootstrapModuleFn(mainFilePath);
 
   const [mainModuleIdentifier] = bootstrapFn?.getArguments() as [Identifier];
 
