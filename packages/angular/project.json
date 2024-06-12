@@ -23,12 +23,6 @@
         "assets": ["packages/angular/*.md"]
       }
     },
-    "nx-release-publish": {
-      "options": {
-        "packageRoot": "dist/{projectRoot}",
-        "tag": "next"
-      }
-    },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],

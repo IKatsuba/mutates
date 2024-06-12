@@ -15,6 +15,11 @@
     "@nx/vite:test": {
       "cache": true,
       "inputs": ["default", "^default"]
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
     }
   },
   "release": {
