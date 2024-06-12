@@ -1,0 +1,16 @@
+{
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/docs",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx -y mintlify@latest dev --port 3001",
+        "cwd": "docs"
+      }
+    }
+  }
+}
