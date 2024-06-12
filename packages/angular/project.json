@@ -20,7 +20,9 @@
         "outputPath": "dist/packages/angular",
         "main": "packages/angular/src/index.ts",
         "tsConfig": "packages/angular/tsconfig.lib.json",
-        "assets": ["packages/angular/*.md"]
+        "assets": ["packages/angular/*.md"],
+        "additionalEntryPoints": ["packages/angular/src/testing.ts"],
+        "generateExportsField": true
       }
     },
     "test": {

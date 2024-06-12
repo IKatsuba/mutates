@@ -1,7 +1,8 @@
 import { basename, join } from 'node:path';
 import type { Tree } from '@angular-devkit/schematics';
-import multimatch from 'multimatch';
 import { FileSystemHost, RuntimeDirEntry } from 'ts-morph';
+
+import { match } from './helpers';
 
 export class NgTreeFileSystem implements FileSystemHost {
   constructor(private readonly tree: Tree) {}
@@ -119,7 +120,7 @@ export class NgTreeFileSystem implements FileSystemHost {
   }
 
   globSync(patterns: readonly string[]): string[] {
-    return multimatch(
+    return match(
       this.readDirSync('/')
         .filter((entry) => entry.isFile)
         .map((entry) => entry.name),
