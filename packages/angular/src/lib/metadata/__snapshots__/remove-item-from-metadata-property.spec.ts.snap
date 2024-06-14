@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`removeItemFromMetadataProperty > should add providers to the app module 1`] = `
+exports[`removeItemFromMetadataProperty > should remove providers from component 1`] = `
 "
 @Component({providers: []}) class AppComponent {}
 "

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`pushToMetadataProperty > should add providers to the app module 1`] = `
+exports[`pushToMetadataProperty > should add providers to component 1`] = `
 "
 @Component({
     providers: [AppService]
