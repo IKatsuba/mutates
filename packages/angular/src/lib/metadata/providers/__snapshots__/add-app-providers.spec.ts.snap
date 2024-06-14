@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`addAppProviders > should add providers to the app module 1`] = `
+"import {NgModule} from '@angular/core';
+    
+@NgModule({
+  providers: [AppService],
+})
+export class AppModule {}
+"
+`;
+
+exports[`addAppProviders > should add providers to the bootstrapApplication function 1`] = `
+"import {bootstrapApplication} from '@angular/platform-browser';
+import {AppComponent} from './app/app.component';
+import {environment} from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+bootstrapApplication(AppComponent, {providers: [AppService]})
+"
+`;

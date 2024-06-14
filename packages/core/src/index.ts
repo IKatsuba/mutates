@@ -1,4 +1,5 @@
 export * from './lib/accessors';
+export * from './lib/arrays';
 export * from './lib/classes';
 export * from './lib/constructors';
 export * from './lib/decorators';

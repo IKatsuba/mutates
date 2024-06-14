@@ -12,7 +12,13 @@ export enum MetadataType {
 
 export function getMetadata(
   klass: ClassDeclaration | ClassDeclaration[],
-  metadataType: MetadataType | MetadataType[],
+  metadataType: MetadataType | MetadataType[] = [
+    MetadataType.NgModule,
+    MetadataType.Component,
+    MetadataType.Directive,
+    MetadataType.Pipe,
+    MetadataType.Injectable,
+  ],
 ): ObjectLiteralExpression[] {
   const decorators = getDecorators(klass, {
     name: metadataType,

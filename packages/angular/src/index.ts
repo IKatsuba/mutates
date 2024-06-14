@@ -6,6 +6,6 @@ export * from './lib/injectable';
 export * from './lib/metadata';
 export * from './lib/module';
 export * from './lib/pipe';
-export * from './lib/testing';
+export * from './lib/types';
 export * from './lib/create-angular-project';
 export * from './lib/ng-tree-file-system';

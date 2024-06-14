@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`setMetadataProperty > should set providers to the component 1`] = `
+"
+@Component({providers: []}) class AppComponent {}
+"
+`;
