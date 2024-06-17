@@ -1,6 +1,3 @@
-> [!WARNING]  
-> This package is still in development and the API is not stable yet.
-
 # Mutates
 
 This is a fork of [ng-morph](https://github.com/taiga-family/ng-morph) that is focused on mutating
