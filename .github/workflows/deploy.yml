@@ -32,7 +32,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build with Next.js
         run: npx nx build docs
