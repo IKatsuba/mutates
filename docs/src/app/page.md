@@ -1,10 +1,10 @@
 ---
-title: Introduction
+title: Get Started
 description: 'Welcome to the Mutates documentation!'
 ---
 
-This is a fork of [ng-morph](https://github.com/taiga-family/ng-morph) that is focused on mutating
-the AST of Angular components.
+`Mutates` is a fork of [ng-morph](https://github.com/taiga-family/ng-morph) that is focused on
+mutating the AST of Angular components.
 
 The biggest difference is that this fork is not focused on Angular specific transformations.
 `Mutates` is a set of tools that can be used to mutate the AST of any TypeScript file.
