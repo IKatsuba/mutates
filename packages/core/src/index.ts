@@ -7,6 +7,7 @@ export * from './lib/enums';
 export * from './lib/exports';
 export * from './lib/fs/file-system';
 export * from './lib/functions';
+export * from './lib/helpers';
 export * from './lib/imports';
 export * from './lib/interfaces';
 export * from './lib/methods';

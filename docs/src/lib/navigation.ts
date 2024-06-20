@@ -7,6 +7,23 @@ export const navigation = [
     ],
   },
   {
+    title: 'Packages',
+    links: [
+      {
+        title: 'Core',
+        href: '/packages/core',
+      },
+      {
+        title: 'Angular',
+        href: '/packages/angular',
+      },
+      {
+        title: 'Nx',
+        href: '/packages/nx',
+      },
+    ],
+  },
+  {
     title: 'Core concepts',
     links: [{ title: 'Testing', href: '/testing' }],
   },

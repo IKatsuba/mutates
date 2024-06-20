@@ -17,7 +17,8 @@
     "paths": {
       "@mutates/angular": ["packages/angular/src/index.ts"],
       "@mutates/core": ["packages/core/src/index.ts"],
-      "@mutates/core/testing": ["packages/core/src/testing.ts"]
+      "@mutates/core/testing": ["packages/core/src/testing.ts"],
+      "@mutates/nx": ["packages/nx/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
