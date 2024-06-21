@@ -1,3 +1,5 @@
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
+
 # @mutates/core
 
 🔧 **@mutates/core** is the essential package of the Mutates toolset, providing the core

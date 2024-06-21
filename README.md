@@ -1,3 +1,5 @@
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
+
 # Mutates
 
 🚀 **Mutates** is a powerful toolset for mutating the Abstract Syntax Tree (AST) of TypeScript

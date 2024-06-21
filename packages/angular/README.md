@@ -1,3 +1,5 @@
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
+
 # @mutates/angular
 
 🌟 **@mutates/angular** is a specialized package within the Mutates toolset, offering powerful tools
