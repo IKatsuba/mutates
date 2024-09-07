@@ -1,6 +1,6 @@
 ---
-title: Get Started
-description: 'Welcome to the Mutates documentation!'
+title: Overview
+description: 'Overview of the Mutates project.'
 ---
 
 `Mutates` is a fork of [ng-morph](https://github.com/taiga-family/ng-morph) that is focused on

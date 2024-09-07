@@ -11,6 +11,10 @@ export function getMetadataProperty<T extends MetadataProperty>(
 ): PropertyAssignment | undefined {
   const [metadata] = getMetadata(klass);
 
+  if (!metadata) {
+    return;
+  }
+
   return getObjectProperties(metadata, {
     name: property as string,
   }).at(0);

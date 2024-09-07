@@ -1,52 +1,82 @@
 export const navigation = [
   {
     title: 'Introduction',
+    links: [{ title: 'Overview', href: '/' }],
+  },
+  {
+    title: 'Getting started',
     links: [
-      { title: 'Getting started', href: '/' },
       { title: 'Installation', href: '/installation' },
+      { title: 'Quick start', href: '/quick-start' },
     ],
   },
   {
-    title: 'Packages',
+    title: 'Core Concepts',
+    links: [
+      { title: 'Understanding AST', href: '/ast' },
+      { title: 'Basic Operations', href: '/basic-operations' },
+    ],
+  },
+  {
+    title: 'Usage Examples',
+    links: [
+      { title: 'Basic Usage', href: '/basic-usage' },
+      { title: 'Advanced Usage', href: '/advanced-usage' },
+    ],
+  },
+  {
+    title: 'API Reference',
     links: [
       {
-        title: 'Core',
-        href: '/packages/core',
+        title: 'Core API',
+        href: '/core',
       },
       {
-        title: 'Angular',
-        href: '/packages/angular',
+        title: 'Angular API',
+        href: '/angular',
       },
       {
-        title: 'Nx',
-        href: '/packages/nx',
+        title: 'Nx API',
+        href: '/nx',
       },
     ],
   },
   {
-    title: 'Core concepts',
-    links: [{ title: 'Testing', href: '/testing' }],
+    title: 'Advanced Topics',
+    links: [
+      { title: 'Framework Integrations', href: '/framework-integrations' },
+      { title: 'Performance Optimization', href: '/performance-optimization' },
+    ],
   },
-  // {
-  //   title: 'Advanced guides',
-  //   links: [
-  //     { title: 'Writing plugins', href: '/docs/writing-plugins' },
-  //     { title: 'Neuralink integration', href: '/docs/neuralink-integration' },
-  //     { title: 'Temporal paradoxes', href: '/docs/temporal-paradoxes' },
-  //     { title: 'Testing', href: '/docs/testing' },
-  //     { title: 'Compile-time caching', href: '/docs/compile-time-caching' },
-  //     {
-  //       title: 'Predictive data generation',
-  //       href: '/docs/predictive-data-generation',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'API reference',
-  //   links: [],
-  // },
   {
-    title: 'Contributing',
-    links: [{ title: 'How to contribute', href: '/how-to-contribute' }],
+    title: 'Best Practices',
+    links: [
+      { title: 'Coding Standards', href: '/coding-standards' },
+      { title: 'Testing', href: '/testing' },
+    ],
+  },
+  {
+    title: 'Contribution',
+    links: [
+      { title: 'Contribution Guide', href: '/contribution-guide' },
+      { title: 'Code of Conduct', href: '/code-of-conduct' },
+    ],
+  },
+  {
+    title: 'FAQ',
+    links: [
+      { title: 'Frequently Asked Questions', href: '/frequently-asked-questions' },
+      { title: 'Troubleshooting', href: '/troubleshooting' },
+    ],
+  },
+  {
+    title: 'Changelog',
+    links: [{ title: 'Version History', href: 'https://github.com/IKatsuba/mutates/releases' }],
+  },
+  {
+    title: 'License',
+    links: [
+      { title: 'Apache License', href: 'https://github.com/ikatsuba/mutates/blob/main/LICENSE' },
+    ],
   },
 ];
