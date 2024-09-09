@@ -1,11 +1,11 @@
-[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
-
 # @mutates/nx
 
 🚀 **@mutates/nx** is a specialized package within the Mutates toolset, offering robust tools to
 mutate the Abstract Syntax Tree (AST) of Nx workspaces. Built on top of `@mutates/core`, this
 package provides Nx-specific transformations, making it easier to work with the modular structure of
 Nx projects, including Angular, and other framework integrations.
+
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
 
 ## Features
 

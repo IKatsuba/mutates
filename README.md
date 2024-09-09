@@ -1,6 +1,6 @@
-[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
-
 # Mutates
+
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
 
 🚀 **Mutates** is a powerful toolset for mutating the Abstract Syntax Tree (AST) of TypeScript
 files. It is a fork of `ng-morph`, with a broader focus beyond Angular-specific transformations,

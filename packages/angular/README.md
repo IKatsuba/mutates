@@ -1,11 +1,11 @@
-[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
-
 # @mutates/angular
 
 🌟 **@mutates/angular** is a specialized package within the Mutates toolset, offering powerful tools
 to mutate the Abstract Syntax Tree (AST) of Angular projects. Built on top of `@mutates/core`, this
 package provides Angular-specific transformations, making it easier to work with Angular components,
 directives, services, and more.
+
+[![](https://raw.githubusercontent.com/IKatsuba/mutates/main/docs/src/app/opengraph-image.png)](https://mutates.katsuba.dev)
 
 ## Features
 
