@@ -2,8 +2,8 @@
   "name": "@mutates/core",
   "version": "0.0.0-development",
   "keywords": [
-    "typescript",
     "ast",
+    "typescript",
     "mutations"
   ],
   "homepage": "https://github.com/IKatsuba/mutates",
