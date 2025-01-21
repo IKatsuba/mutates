@@ -20,7 +20,7 @@ console.log(a);
   });
 
   it('should edit imports', () => {
-    const imports = getImports('some/path/file.ts');
+    const imports = getImports({ pattern: 'some/path/file.ts' });
 
     editImports(imports, () => ({
       namedImports: ['b,c'],

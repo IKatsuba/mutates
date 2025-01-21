@@ -28,19 +28,19 @@ class B {
   });
 
   it('should find two methods', () => {
-    const declarations = getMethods(getClasses('some/path/**.ts'));
+    const declarations = getMethods(getClasses());
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one method', () => {
-    const declarations = getMethods(getClasses('some/path/file.ts'));
+    const declarations = getMethods(getClasses({ pattern: 'some/path/file.ts' }));
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one method by name', () => {
-    const declarations = getMethods(getClasses('some/path/**.ts'), {
+    const declarations = getMethods(getClasses(), {
       name: 'd',
       isStatic: true,
     });

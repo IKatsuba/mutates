@@ -43,25 +43,25 @@ class B {
   });
 
   it('should find two decorators', () => {
-    const declarations = getDecorators(getClasses('some/path/**.ts'));
+    const declarations = getDecorators(getClasses());
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one decorator', () => {
-    const declarations = getDecorators(getClasses('some/path/file.ts'));
+    const declarations = getDecorators(getClasses({ pattern: 'some/path/file.ts' }));
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one decorator by name', () => {
-    const declarations = getAllDecorators('some/path/**.ts');
+    const declarations = getAllDecorators();
 
     expect(declarations.length).toBe(9);
   });
 
   it('should find one decorator by name for Inject', () => {
-    const declarations = getAllDecorators('some/path/**.ts', {
+    const declarations = getAllDecorators({
       name: 'Inject',
     });
 

@@ -9,14 +9,15 @@ export function getDeclarationGetter<
   Structure extends StructureType<Declaration> = StructureType<Declaration>,
 >(getFn: (pattern: Pattern) => Declaration[]) {
   return function getDeclaration(
-    pattern: Pattern,
-    query?: Query<Omit<Structure, 'kind'>>,
+    query?: Query<Omit<Structure, 'kind'>> & { pattern?: Pattern },
   ): Declaration[] {
-    return getFn(pattern).filter((declaration) =>
+    const { pattern, ...rest } = query ?? {};
+
+    return getFn(pattern ?? '**/*').filter((declaration) =>
       // TODO: refactor it to support new typings
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      matchQuery(declaration.getStructure(), query),
+      matchQuery(declaration.getStructure(), rest),
     );
   };
 }

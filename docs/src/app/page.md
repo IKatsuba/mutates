@@ -32,7 +32,7 @@ createProject();
 
 addSourceFiles(['src/**/*.ts']);
 
-const componentCount = getClasses('**/*.ts').length;
+const componentCount = getClasses().length;
 
 console.log(`Found ${componentCount} components.`);
 ```
@@ -51,7 +51,7 @@ createProject(new InMemoryFileSystemHost());
 
 createSourceFile('src/index.ts', 'export class Test {}');
 
-const componentCount = getClasses('**/*.ts').length;
+const componentCount = getClasses().length;
 
 console.log(`Found ${componentCount} components.`);
 ```
@@ -67,7 +67,7 @@ export function ngAdd(options: scssScaffoldOptions): Rule {
   return (host: Tree) => {
     createAngularProject(host);
 
-    const components = getComponents('**/*.ts');
+    const components = getComponents();
 
     console.log(`Found ${components.length} components.`);
 

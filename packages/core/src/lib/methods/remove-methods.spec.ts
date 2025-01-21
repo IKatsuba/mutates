@@ -25,7 +25,7 @@ class A {
   });
 
   it('should remove methods', () => {
-    const declarations = getMethods(getClasses('some/path/file.ts', { name: 'A' }), {
+    const declarations = getMethods(getClasses({ name: 'A', pattern: 'some/path/file.ts' }), {
       name: 'test',
     });
 

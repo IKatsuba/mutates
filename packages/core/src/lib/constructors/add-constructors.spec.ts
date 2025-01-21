@@ -22,7 +22,7 @@ class B {
   });
 
   it('should add constructors', () => {
-    addConstructors(getClasses('some/path/file.ts', { name: 'B' }), {
+    addConstructors(getClasses({ name: 'B', pattern: 'some/path/file.ts' }), {
       parameters: [
         {
           decorators: [{ name: 'Inject', arguments: ['SomeType'] }],
