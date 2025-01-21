@@ -22,7 +22,7 @@ describe('getMetadataProperty', () => {
 @NgModule({providers: []}) class AppModule {}
     `,
     );
-    const metadataProperty = getMetadataProperty(getNgModule().at(0)!, 'providers');
+    const metadataProperty = getMetadataProperty(getNgModule('src/main.ts').at(0)!, 'providers');
 
     expect(metadataProperty?.getText()).matchSnapshot();
   });

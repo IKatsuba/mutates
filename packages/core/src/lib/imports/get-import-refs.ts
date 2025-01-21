@@ -1,4 +1,4 @@
-import { Identifier, ImportSpecifier, Node } from 'ts-morph';
+import { ImportSpecifier, Node } from 'ts-morph';
 
 import { coerceArray } from '../utils';
 
@@ -6,8 +6,7 @@ export function getImportRefs(imports: ImportSpecifier | ImportSpecifier[]): Nod
   const importNames = coerceArray(imports).map((imp) => imp.getName());
 
   return coerceArray(imports)
-    .filter((imp) => Node.isIdentifier(imp.getNameNode()))
-    .flatMap((imp) => (imp.getNameNode() as Identifier).findReferencesAsNodes())
+    .flatMap((imp) => imp.getNameNode().findReferencesAsNodes())
     .filter((node) => {
       const parent = node.getParent();
 

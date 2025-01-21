@@ -13,7 +13,7 @@ describe('removeInterfaces', () => {
   });
 
   it('should remove Interfaces', () => {
-    const declarations = getInterfaces({ pattern: 'some/path/file.ts' });
+    const declarations = getInterfaces('some/path/file.ts');
 
     removeInterfaces(declarations);
 

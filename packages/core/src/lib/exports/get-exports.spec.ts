@@ -23,19 +23,19 @@ export { c } from 'd';
   });
 
   it('should find two exports', () => {
-    const exports = getExports();
+    const exports = getExports('some/path/**.ts');
 
     expect(exports.length).toBe(2);
   });
 
   it('should find one export', () => {
-    const exports = getExports({ pattern: 'some/path/file.ts' });
+    const exports = getExports('some/path/file.ts');
 
     expect(exports.length).toBe(1);
   });
 
   it('should find one export by name', () => {
-    const exports = getExports({
+    const exports = getExports('some/path/**.ts', {
       moduleSpecifier: 'd',
     });
 

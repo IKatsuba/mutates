@@ -23,19 +23,19 @@ interface B {}
   });
 
   it('should find two Interfaces', () => {
-    const declarations = getInterfaces();
+    const declarations = getInterfaces('some/path/**.ts');
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one interface', () => {
-    const declarations = getInterfaces({ pattern: 'some/path/file.ts' });
+    const declarations = getInterfaces('some/path/file.ts');
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one interface by name', () => {
-    const declarations = getInterfaces({
+    const declarations = getInterfaces('some/path/**.ts', {
       name: 'B',
     });
 

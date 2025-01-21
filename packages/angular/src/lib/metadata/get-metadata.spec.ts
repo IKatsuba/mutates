@@ -30,7 +30,7 @@ export class AppComponent {}
   });
 
   it('should return metadata', () => {
-    const metadata = getComponentMetadata(getClasses());
+    const metadata = getComponentMetadata(getClasses('src/app/**/*.ts'));
 
     expect(metadata.at(0)?.getText()).toEqual(`{
   selector: 'app-root',

@@ -23,7 +23,7 @@ class A {
   });
 
   it('should edit properties', () => {
-    const declarations = getClassProperties(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getClassProperties(getClasses('some/path/file.ts'));
 
     editClassProperties(declarations, () => ({
       name: 'b',

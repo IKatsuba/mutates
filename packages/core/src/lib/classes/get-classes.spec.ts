@@ -23,19 +23,19 @@ class B { }
   });
 
   it('should find two classes', () => {
-    const exports = getClasses();
+    const exports = getClasses('some/path/**.ts');
 
     expect(exports.length).toBe(2);
   });
 
   it('should find one class', () => {
-    const exports = getClasses({ pattern: 'some/path/file.ts' });
+    const exports = getClasses('some/path/file.ts');
 
     expect(exports.length).toBe(1);
   });
 
   it('should find one export by class name', () => {
-    const exports = getClasses({
+    const exports = getClasses('some/path/**.ts', {
       name: 'B',
     });
 

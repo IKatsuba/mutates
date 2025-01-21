@@ -21,7 +21,7 @@ const b = Test.First;
   });
 
   it('should edit enums', () => {
-    const declarations = getEnums({ pattern: 'some/path/file.ts' });
+    const declarations = getEnums('some/path/file.ts');
 
     editEnums(declarations, () => ({
       name: 'Name',

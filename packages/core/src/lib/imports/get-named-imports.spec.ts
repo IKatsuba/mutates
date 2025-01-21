@@ -16,7 +16,7 @@ import { a } from 'd';
 `,
     );
 
-    const imports = getNamedImports(getImports(), {
+    const imports = getNamedImports(getImports('some/path/**.ts'), {
       name: 'a',
     });
 

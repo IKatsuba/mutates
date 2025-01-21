@@ -24,7 +24,7 @@ class B {
   });
 
   it('should edit params', () => {
-    const declarations = getParams(getConstructors(getClasses({ pattern: 'some/path/file.ts' })), {
+    const declarations = getParams(getConstructors(getClasses('some/path/file.ts')), {
       name: 'param2',
     });
 

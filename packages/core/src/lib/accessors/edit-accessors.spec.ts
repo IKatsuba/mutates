@@ -23,7 +23,7 @@ class A {
   });
 
   it('should edit accessors', () => {
-    const declarations = getAccessors(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getAccessors(getClasses('some/path/file.ts'));
 
     editAccessors(declarations, () => ({
       name: 'anotherName',

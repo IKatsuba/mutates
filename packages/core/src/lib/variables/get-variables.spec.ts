@@ -15,19 +15,19 @@ describe('getVariables', () => {
   });
 
   it('should find two variables', () => {
-    const declarations = getVariables();
+    const declarations = getVariables('some/path/**.ts');
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one variable', () => {
-    const declarations = getVariables({ pattern: 'some/path/file.ts' });
+    const declarations = getVariables('some/path/file.ts');
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one variable by variable kind', () => {
-    const declarations = getVariables({
+    const declarations = getVariables('some/path/**.ts', {
       declarationKind: VariableDeclarationKind.Var,
     });
 

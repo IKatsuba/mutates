@@ -20,7 +20,7 @@ class A {}
   });
 
   it('should remove decorators', () => {
-    const declarations = getDecorators(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getDecorators(getClasses('some/path/file.ts'));
 
     removeDecorators(declarations);
 

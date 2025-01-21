@@ -33,7 +33,7 @@ const b = {
 
   it('should find two properties', () => {
     const declarations = getObjectProperties(
-      getVariables()
+      getVariables('some/path/**.ts')
         ?.map((v) => v.getDeclarations())
         .flat()
         .map((d) => d.getInitializer())
@@ -45,7 +45,7 @@ const b = {
 
   it('should find one property', () => {
     const declarations = getObjectProperties(
-      getVariables({ pattern: 'some/path/file.ts' })
+      getVariables('some/path/file.ts')
         .at(0)
         ?.getDeclarations()
         .at(0)

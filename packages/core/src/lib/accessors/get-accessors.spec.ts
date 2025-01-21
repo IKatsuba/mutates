@@ -28,19 +28,19 @@ class B {
   });
 
   it('should find two accessors', () => {
-    const declarations = getAccessors(getClasses());
+    const declarations = getAccessors(getClasses('some/path/**.ts'));
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one accessor', () => {
-    const declarations = getAccessors(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getAccessors(getClasses('some/path/file.ts'));
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one accessor by name', () => {
-    const declarations = getAccessors(getClasses(), {
+    const declarations = getAccessors(getClasses('some/path/**.ts'), {
       name: 'setter',
     });
 

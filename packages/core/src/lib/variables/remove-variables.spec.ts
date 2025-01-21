@@ -13,7 +13,7 @@ describe('removeVariables', () => {
   });
 
   it('should remove variables', () => {
-    const declarations = getVariables({ pattern: 'some/path/file.ts' });
+    const declarations = getVariables('some/path/file.ts');
 
     removeVariables(declarations);
 

@@ -13,19 +13,19 @@ describe('getTypeAliases', () => {
   });
 
   it('should find two type aliases', () => {
-    const declarations = getTypeAliases();
+    const declarations = getTypeAliases('some/path/**.ts');
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one type aliases', () => {
-    const declarations = getTypeAliases({ pattern: 'some/path/file.ts' });
+    const declarations = getTypeAliases('some/path/file.ts');
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one type alias by name', () => {
-    const declarations = getTypeAliases({
+    const declarations = getTypeAliases('some/path/**.ts', {
       name: 'B',
     });
 
