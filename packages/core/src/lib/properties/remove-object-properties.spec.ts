@@ -24,7 +24,7 @@ const b = {
 
   it('should remove methods', () => {
     const declarations = getObjectProperties(
-      getVariables('some/path/file.ts')
+      getVariables({ pattern: 'some/path/file.ts' })
         .at(0)
         ?.getDeclarations()
         .at(0)

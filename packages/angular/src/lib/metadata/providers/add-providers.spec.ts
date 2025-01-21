@@ -23,7 +23,7 @@ describe('addProviders', () => {
 `,
     );
 
-    addProviders(getComponents('src/main.ts').at(0)!, ['AppService']);
+    addProviders(getComponents().at(0)!, ['AppService']);
 
     saveProject();
 

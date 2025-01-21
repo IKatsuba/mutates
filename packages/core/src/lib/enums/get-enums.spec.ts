@@ -25,19 +25,19 @@ enum B {
   });
 
   it('should find two enums', () => {
-    const declarations = getEnums('some/path/**.ts');
+    const declarations = getEnums();
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one enum', () => {
-    const declarations = getEnums('some/path/file.ts');
+    const declarations = getEnums({ pattern: 'some/path/file.ts' });
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one enum by name', () => {
-    const declarations = getEnums('some/path/**.ts', {
+    const declarations = getEnums({
       name: 'B',
     });
 

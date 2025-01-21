@@ -20,7 +20,7 @@ function a(){
   });
 
   it('should rename a function', () => {
-    const functions = getFunctions('some/**/**.ts');
+    const functions = getFunctions();
 
     editFunctions(functions, () => ({
       isExported: true,

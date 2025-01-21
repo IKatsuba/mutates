@@ -23,7 +23,7 @@ class A {
   });
 
   it('should remove constructors', () => {
-    const declarations = getConstructors(getClasses('some/path/file.ts'));
+    const declarations = getConstructors(getClasses({ pattern: 'some/path/file.ts' }));
 
     removeConstructors(declarations);
 

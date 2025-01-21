@@ -20,7 +20,7 @@ const a: A;
   });
 
   it('should remove classes', () => {
-    removeClasses(getClasses('**/**', { name: 'A' }));
+    removeClasses(getClasses({ name: 'A' }));
 
     saveProject();
 

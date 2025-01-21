@@ -20,7 +20,7 @@ class A {}
   });
 
   it('should add accessors to the class', async () => {
-    addAccessors(getClasses('some/path/file.ts'), [
+    addAccessors(getClasses({ pattern: 'some/path/file.ts' }), [
       {
         name: 'setter',
         kind: StructureKind.SetAccessor,
