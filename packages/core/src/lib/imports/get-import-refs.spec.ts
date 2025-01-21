@@ -19,7 +19,7 @@ a();
 `,
     );
 
-    const imports = getNamedImports(getImports('some/path/**.ts'), {
+    const imports = getNamedImports(getImports(), {
       name: 'a',
     });
 

@@ -19,7 +19,7 @@ class B {}
   });
 
   it('should add methods', () => {
-    addMethods(getClasses('some/path/file.ts', { name: 'B' }), {
+    addMethods(getClasses({ name: 'B', pattern: 'some/path/file.ts' }), {
       name: 'test',
       statements: 'return 0;',
       returnType: 'number',

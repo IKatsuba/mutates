@@ -24,7 +24,7 @@ export function b() {
   });
 
   it('should remove the `b` function', () => {
-    removeFunctions(getFunctions('some/**/**.ts', { name: 'b' }));
+    removeFunctions(getFunctions({ name: 'b' }));
 
     saveProject();
 

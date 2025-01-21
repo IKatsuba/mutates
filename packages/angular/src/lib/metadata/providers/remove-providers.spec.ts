@@ -25,7 +25,7 @@ describe('removeProviders', () => {
 `,
     );
 
-    removeProviders(getComponents('src/main.ts').at(0)!, ['AppProvider']);
+    removeProviders(getComponents().at(0)!, ['AppProvider']);
 
     saveProject();
 
