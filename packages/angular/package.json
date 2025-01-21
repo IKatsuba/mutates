@@ -23,7 +23,7 @@
   },
   "peerDependencies": {
     "@angular-devkit/schematics": ">=18.0.0",
-    "ts-morph": ">=25.0.0"
+    "ts-morph": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"

@@ -59,7 +59,7 @@ createSourceFile(
 );
 
 // Perform some Angular-specific transformations
-addProviders(getComponents().at(0)!, ['AppService']);
+addProviders(getComponents('app.component.ts').at(0)!, ['AppService']);
 
 // Save the modified file
 saveProject();
@@ -81,7 +81,7 @@ export function mySchematic(): Rule {
     createAngularProject(tree);
 
     // Perform Angular-specific transformations
-    addProviders(getComponents().at(0)!, ['AppService']);
+    addProviders(getComponents('app.component.ts').at(0)!, ['AppService']);
 
     saveProject();
 

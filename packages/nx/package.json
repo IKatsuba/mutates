@@ -23,8 +23,8 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@nx/devkit": ">=20.0.0",
-    "ts-morph": ">=25.0.0"
+    "@nx/devkit": ">=19.0.0",
+    "ts-morph": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"

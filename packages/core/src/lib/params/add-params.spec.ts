@@ -21,7 +21,7 @@ class B {
   });
 
   it('should add params', () => {
-    addParams(getMethods(getClasses({ pattern: 'some/path/file.ts' }), { name: 'add' }), [
+    addParams(getMethods(getClasses('some/path/file.ts'), { name: 'add' }), [
       {
         name: 'param',
         type: 'number',

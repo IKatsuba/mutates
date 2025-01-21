@@ -20,7 +20,7 @@ export function getDecorators(
 }
 
 export const getAllDecorators = getDeclarationGetter<Decorator>((pattern) => {
-  const classes = getClasses({ pattern });
+  const classes = getClasses(pattern);
   const methods = getMethods(classes);
   const constructors = getConstructors(classes);
   const properties = getClassProperties(classes);

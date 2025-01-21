@@ -23,7 +23,7 @@ A.prototype.test();
   });
 
   it('should edit methods', () => {
-    const declarations = getMethods(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getMethods(getClasses('some/path/file.ts'));
 
     editMethods(declarations, ({ isAsync }) => ({
       name: 'b',

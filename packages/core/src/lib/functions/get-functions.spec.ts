@@ -20,7 +20,7 @@ function a(){
   });
 
   it('should find all functions', () => {
-    const functions = getFunctions();
+    const functions = getFunctions('some/**/**.ts');
 
     expect(functions.map(Node.isFunctionDeclaration)).toEqual([true]);
   });

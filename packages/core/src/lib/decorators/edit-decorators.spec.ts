@@ -24,7 +24,7 @@ class A{
   });
 
   it('should edit decorators', () => {
-    const declarations = getDecorators(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getDecorators(getClasses('some/path/file.ts'));
 
     editDecorators(declarations, () => ({
       name: 'Directive',

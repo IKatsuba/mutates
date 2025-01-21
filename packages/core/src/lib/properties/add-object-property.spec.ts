@@ -21,7 +21,7 @@ const a = {};
 
   it('should add properties', () => {
     addObjectProperty(
-      getVariables({ pattern: 'some/path/file.ts' })
+      getVariables('some/path/file.ts')
         .at(0)
         ?.getDeclarations()
         .at(0)

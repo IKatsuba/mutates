@@ -20,7 +20,7 @@ const a: A;
   });
 
   it('should edit classes', () => {
-    const classes = getClasses({ pattern: 'some/path/file.ts' });
+    const classes = getClasses('some/path/file.ts');
 
     editClasses(classes, () => ({
       isExported: true,

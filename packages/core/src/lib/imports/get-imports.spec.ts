@@ -27,19 +27,19 @@ import b from 'd';
   });
 
   it('should find two imports', () => {
-    const imports = getImports();
+    const imports = getImports('some/path/**.ts');
 
     expect(imports.length).toBe(4);
   });
 
   it('should find one import', () => {
-    const imports = getImports({ pattern: 'some/path/file.ts' });
+    const imports = getImports('some/path/file.ts');
 
     expect(imports.length).toBe(1);
   });
 
   it('should find one import by module name', () => {
-    const imports = getImports({
+    const imports = getImports('some/path/**.ts', {
       moduleSpecifier: 'd',
       namedImports: 'c',
     });

@@ -34,19 +34,19 @@ class B {
   });
 
   it('should find two constructors', () => {
-    const declarations = getConstructors(getClasses());
+    const declarations = getConstructors(getClasses('some/path/**.ts'));
 
     expect(declarations.length).toBe(2);
   });
 
   it('should find one constructor', () => {
-    const declarations = getConstructors(getClasses({ pattern: 'some/path/file.ts' }));
+    const declarations = getConstructors(getClasses('some/path/file.ts'));
 
     expect(declarations.length).toBe(1);
   });
 
   it('should find one constructor by name', () => {
-    const declarations = getConstructors(getClasses(), {
+    const declarations = getConstructors(getClasses('some/path/**.ts'), {
       scope: Scope.Protected,
     });
 

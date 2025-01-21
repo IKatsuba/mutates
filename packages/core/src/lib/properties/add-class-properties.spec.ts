@@ -19,7 +19,7 @@ class B {}
   });
 
   it('should add properties', () => {
-    addClassProperties(getClasses({ name: 'B', pattern: 'some/path/file.ts' }), {
+    addClassProperties(getClasses('some/path/file.ts', { name: 'B' }), {
       name: 'test',
       initializer: '3',
     });

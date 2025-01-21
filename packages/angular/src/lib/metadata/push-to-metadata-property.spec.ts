@@ -23,7 +23,7 @@ describe('pushToMetadataProperty', () => {
 `,
     );
 
-    pushToMetadataProperty(getComponents().at(0)!, 'providers', ['AppService']);
+    pushToMetadataProperty(getComponents('src/main.ts').at(0)!, 'providers', ['AppService']);
 
     saveProject();
 

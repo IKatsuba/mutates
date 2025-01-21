@@ -20,7 +20,7 @@ console.log(a);
   });
 
   it('should remove imports', () => {
-    const imports = getImports({ pattern: 'some/path/file.ts' });
+    const imports = getImports('some/path/file.ts');
 
     removeImports(imports);
 

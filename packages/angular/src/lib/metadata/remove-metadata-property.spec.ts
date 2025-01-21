@@ -23,7 +23,7 @@ describe('removeMetadataProperty', () => {
 `,
     );
 
-    removeMetadataProperty(getComponents().at(0)!, 'providers');
+    removeMetadataProperty(getComponents('src/main.ts').at(0)!, 'providers');
 
     saveProject();
 

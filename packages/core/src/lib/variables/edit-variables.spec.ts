@@ -15,7 +15,7 @@ describe('editVariables', () => {
   });
 
   it('should edit variables', () => {
-    const declarations = getVariables({ pattern: 'some/path/file.ts' });
+    const declarations = getVariables('some/path/file.ts');
 
     editVariables(declarations, () => ({
       declarationKind: VariableDeclarationKind.Let,

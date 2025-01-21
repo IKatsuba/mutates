@@ -23,7 +23,7 @@ describe('setMetadataProperty', () => {
 `,
     );
 
-    setMetadataProperty(getComponents().at(0)!, 'providers', '[]');
+    setMetadataProperty(getComponents('src/main.ts').at(0)!, 'providers', '[]');
 
     saveProject();
 
