@@ -20,7 +20,7 @@ console.log(a);
   });
 
   it('should edit exports', () => {
-    const exports = getExports('some/path/file.ts');
+    const exports = getExports({ pattern: 'some/path/file.ts' });
 
     editExports(exports, () => ({
       namedExports: ['b,c'],

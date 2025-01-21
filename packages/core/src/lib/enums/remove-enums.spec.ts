@@ -13,7 +13,7 @@ describe('removeEnums', () => {
   });
 
   it('should remove enums', () => {
-    const declarations = getEnums('some/path/file.ts', { name: 'Test' });
+    const declarations = getEnums({ name: 'Test', pattern: 'some/path/file.ts' });
 
     removeEnums(declarations);
 

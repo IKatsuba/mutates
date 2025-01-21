@@ -23,9 +23,7 @@ describe('removeItemFromMetadataProperty', () => {
 `,
     );
 
-    removeItemFromMetadataProperty(getComponents('src/main.ts').at(0)!, 'providers', [
-      'AppService',
-    ]);
+    removeItemFromMetadataProperty(getComponents().at(0)!, 'providers', ['AppService']);
 
     saveProject();
 

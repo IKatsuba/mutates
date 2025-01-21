@@ -34,7 +34,7 @@ class A {
   });
 
   it('should add decorators', () => {
-    const classes = getClasses('some/path/file.ts');
+    const classes = getClasses({ pattern: 'some/path/file.ts' });
     const methods = getMethods(classes, { name: 'method' });
     const constructorParams = getParams(getConstructors(classes), {
       name: 'param',

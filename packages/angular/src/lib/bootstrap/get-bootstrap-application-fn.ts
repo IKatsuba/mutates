@@ -5,8 +5,9 @@ import { getImportRefs, getImports, getNamedImports } from '@mutates/core';
 
 export function getBootstrapApplicationFn(mainFilePath: string): CallExpression | undefined {
   const [namedImport] = getNamedImports(
-    getImports(mainFilePath, {
+    getImports({
       moduleSpecifier: '@angular/platform-browser',
+      pattern: mainFilePath,
     }),
     {
       name: 'bootstrapApplication',

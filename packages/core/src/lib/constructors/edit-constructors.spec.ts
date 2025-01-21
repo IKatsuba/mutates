@@ -25,7 +25,7 @@ class A {
   });
 
   it('should edit constructors', () => {
-    const declarations = getConstructors(getClasses('some/path/file.ts'));
+    const declarations = getConstructors(getClasses({ pattern: 'some/path/file.ts' }));
 
     editConstructors(declarations, () => ({
       scope: Scope.Protected,

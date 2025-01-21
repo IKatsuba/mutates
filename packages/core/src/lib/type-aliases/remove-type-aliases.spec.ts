@@ -13,7 +13,7 @@ describe('removeTypeAliases', () => {
   });
 
   it('should remove type aliases', () => {
-    const declarations = getTypeAliases('some/path/file.ts');
+    const declarations = getTypeAliases({ pattern: 'some/path/file.ts' });
 
     removeTypeAliases(declarations);
 
