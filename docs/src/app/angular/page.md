@@ -3,7 +3,7 @@ title: '@mutates/angular'
 nextjs:
   metadata:
     title: '@mutates/angular'
-    description: How to install `@mutates/angular` and get started.
+    description: Learn how to use Mutates with Angular projects
 ---
 
 # @mutates/angular
@@ -25,70 +25,286 @@ directives, services, and more.
 
 ## Installation
 
-To install the Angular package, use the following command:
+Install both the Angular package and the core package:
 
-```sh
+```bash
 npm install @mutates/angular @mutates/core
 ```
 
-## Usage
+## Basic Usage
 
-### Basic Example
+### Project Setup
 
-Here is a simple example demonstrating how to use `@mutates/angular` to modify an Angular component:
-
-```typescript
-import { addProviders, getComponents } from '@mutates/angular';
-import { createProject, createSourceFile, saveProject } from '@mutates/core';
-
-// Initialize a new Angular project
-createProject();
-
-// Add an Angular component file to the project
-createSourceFile(
-  'app.component.ts',
-  `
-  import { Component } from '@angular/core';
-
-  @Component({
-    selector: 'app-root',
-    template: '<h1>Hello, World!</h1>'
-  })
-  export class AppComponent {}
-`,
-);
-
-// Perform some Angular-specific transformations
-addProviders(getComponents().at(0)!, ['AppService']);
-
-// Save the modified file
-saveProject();
-```
-
-For schematics and migrations the package provided special function to connect with Angular Tree.
-Angular Tree is a special tree that is used to work with Angular projects. It is based on the
-`@angular-devkit/schematics` package.
+Initialize an Angular project with Mutates:
 
 ```typescript
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-
 import { createAngularProject } from '@mutates/angular';
 import { saveProject } from '@mutates/core';
 
-export function mySchematic(): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    // Use Angular Tree to work with Angular projects
+// Create project with Angular support
+createAngularProject();
+
+// Make modifications...
+
+// Save changes
+saveProject();
+```
+
+### Working with Components
+
+Find and modify Angular components:
+
+```typescript
+import { getComponents, editComponents, addProviders } from '@mutates/angular';
+
+// Find components
+const components = getComponents({
+  pattern: 'src/**/*.component.ts'
+});
+
+// Modify components
+editComponents(components, () => ({
+  changeDetection: 'ChangeDetectionStrategy.OnPush',
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
+}));
+
+// Add providers
+addProviders(components, ['MyService']);
+```
+
+### Module Management
+
+Manipulate Angular modules:
+
+```typescript
+import { getModules, addImports, addDeclarations } from '@mutates/angular';
+
+const modules = getModules();
+
+// Add imports
+addImports(modules, {
+  namedImports: ['CommonModule'],
+  moduleSpecifier: '@angular/common'
+});
+
+// Add declarations
+addDeclarations(modules, ['MyComponent']);
+```
+
+## Advanced Features
+
+### Standalone Migration
+
+Convert NgModule-based components to standalone:
+
+```typescript
+import { migrateToStandalone, getComponents } from '@mutates/angular';
+
+const components = getComponents();
+migrateToStandalone(components);
+```
+
+### Dependency Injection
+
+Manage dependencies and providers:
+
+```typescript
+import { addInjectionToken, editProviders } from '@mutates/angular';
+
+// Add injection token
+addInjectionToken('src/app/tokens.ts', {
+  name: 'API_URL',
+  type: 'string',
+  value: '"https://api.example.com"'
+});
+
+// Edit providers
+editProviders(targetModule, (providers) => [
+  ...providers,
+  { provide: 'API_URL', useValue: 'https://api.example.com' }
+]);
+```
+
+### Template Manipulation
+
+Update component templates:
+
+```typescript
+import { editComponents } from '@mutates/angular';
+
+editComponents(components, () => ({
+  template: `
+    <div *ngIf="data$ | async as data">
+      {{ data | json }}
+    </div>
+  `
+}));
+```
+
+## Common Use Cases
+
+### Adding Angular Material
+
+```typescript
+import { addImports, getModules } from '@mutates/angular';
+
+const modules = getModules();
+
+// Add Material modules
+addImports(modules, [
+  {
+    namedImports: ['MatButtonModule'],
+    moduleSpecifier: '@angular/material/button'
+  },
+  {
+    namedImports: ['MatInputModule'],
+    moduleSpecifier: '@angular/material/input'
+  }
+]);
+```
+
+### Setting Up Routing
+
+```typescript
+import { addRoutes, getModules } from '@mutates/angular';
+
+const modules = getModules();
+
+// Add routes
+addRoutes(modules, [
+  {
+    path: 'users',
+    component: 'UsersComponent',
+    children: [
+      {
+        path: ':id',
+        component: 'UserDetailComponent'
+      }
+    ]
+  }
+]);
+```
+
+### Adding Services
+
+```typescript
+import { addServices } from '@mutates/angular';
+
+// Create new service
+addServices('src/app/services', {
+  name: 'DataService',
+  methods: [
+    {
+      name: 'getData',
+      returnType: 'Observable<any>',
+      statements: 'return this.http.get("/api/data");'
+    }
+  ],
+  constructorParameters: [
+    {
+      name: 'http',
+      type: 'HttpClient',
+      accessModifier: 'private'
+    }
+  ]
+});
+```
+
+## Best Practices
+
+### Pattern Matching
+
+Use specific patterns for different Angular files:
+
+```typescript
+// Components
+getComponents({ pattern: 'src/**/*.component.ts' });
+
+// Services
+getServices({ pattern: 'src/**/*.service.ts' });
+
+// Modules
+getModules({ pattern: 'src/**/*.module.ts' });
+```
+
+### Error Handling
+
+Wrap Angular operations in try-catch:
+
+```typescript
+import { createAngularProject } from '@mutates/angular';
+import { resetActiveProject } from '@mutates/core';
+
+try {
+  createAngularProject();
+  // Your transformations...
+} catch (error) {
+  console.error('Angular transformation failed:', error);
+} finally {
+  resetActiveProject();
+}
+```
+
+### Testing Transformations
+
+Create tests for your transformations:
+
+```typescript
+import { createTestingProject } from '@mutates/core/testing';
+import { getComponents, addProviders } from '@mutates/angular';
+
+describe('Angular Transformations', () => {
+  beforeEach(() => {
+    createTestingProject();
+  });
+
+  it('should add providers to component', () => {
+    // Your test code
+  });
+});
+```
+
+## Integration with Build Tools
+
+### Angular CLI
+
+Use with ng add:
+
+```typescript
+import { createAngularProject } from '@mutates/angular';
+
+export function ngAdd(options: any) {
+  createAngularProject();
+  // Your modifications...
+}
+```
+
+### Schematics
+
+Create custom schematics:
+
+```typescript
+import { Rule } from '@angular-devkit/schematics';
+import { createAngularProject } from '@mutates/angular';
+
+export function customSchematic(): Rule {
+  return (tree) => {
     createAngularProject(tree);
-
-    // Perform Angular-specific transformations
-    addProviders(getComponents().at(0)!, ['AppService']);
-
-    saveProject();
-
+    // Your transformations...
     return tree;
   };
 }
 ```
+
+## Next Steps
+
+- Learn about [Advanced Usage](/advanced-usage)
+- Explore [Framework Integrations](/framework-integrations)
+- Check out the [Core Package Documentation](/core)
 
 ## API Reference
 
