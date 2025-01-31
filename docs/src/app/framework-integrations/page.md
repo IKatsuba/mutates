@@ -6,9 +6,8 @@ nextjs:
     description: 'Learn how to use Mutates with Angular, Nx, and other frameworks'
 ---
 
-# Framework Integrations
-
-Mutates provides specialized packages for different frameworks and build tools. This guide explains how to use Mutates with various frameworks and tools.
+Mutates provides specialized packages for different frameworks and build tools. This guide explains
+how to use Mutates with various frameworks and tools.
 
 ## Angular Integration
 
@@ -23,7 +22,7 @@ npm install @mutates/angular @mutates/core
 ### Basic Usage
 
 ```typescript
-import { addProviders, getComponents, createAngularProject } from '@mutates/angular';
+import { addProviders, createAngularProject, getComponents } from '@mutates/angular';
 import { saveProject } from '@mutates/core';
 
 // Initialize project with Angular support
@@ -41,33 +40,36 @@ saveProject();
 ### Angular-Specific Features
 
 1. **Component Manipulation**
+
 ```typescript
 import { editComponents } from '@mutates/angular';
 
 editComponents(components, () => ({
   changeDetection: 'ChangeDetectionStrategy.OnPush',
-  styles: ['h1 { color: blue; }']
+  styles: ['h1 { color: blue; }'],
 }));
 ```
 
 2. **Module Management**
+
 ```typescript
 import { addImports, getModules } from '@mutates/angular';
 
 const modules = getModules();
 addImports(modules, {
   namedImports: ['CommonModule'],
-  moduleSpecifier: '@angular/common'
+  moduleSpecifier: '@angular/common',
 });
 ```
 
 3. **Service Integration**
+
 ```typescript
 import { addDecorators } from '@mutates/core';
 
 addDecorators(targetClass, {
   name: 'Injectable',
-  arguments: ['{providedIn: \'root\'}']
+  arguments: ["{providedIn: 'root'}"],
 });
 ```
 
@@ -84,8 +86,8 @@ npm install @mutates/nx @mutates/core
 ### Basic Usage
 
 ```typescript
-import { createNxProject } from '@mutates/nx';
 import { saveProject } from '@mutates/core';
+import { createNxProject } from '@mutates/nx';
 
 // Initialize Nx project
 createNxProject();
@@ -98,25 +100,27 @@ saveProject();
 ### Nx-Specific Features
 
 1. **Project Configuration**
+
 ```typescript
 import { editProjectConfiguration } from '@mutates/nx';
 
 editProjectConfiguration('my-app', {
   targets: {
     build: {
-      executor: '@nx/webpack:webpack'
-    }
-  }
+      executor: '@nx/webpack:webpack',
+    },
+  },
 });
 ```
 
 2. **Workspace Management**
+
 ```typescript
 import { updateWorkspaceConfig } from '@mutates/nx';
 
 updateWorkspaceConfig({
   npmScope: 'my-org',
-  defaultProject: 'main-app'
+  defaultProject: 'main-app',
 });
 ```
 
@@ -125,15 +129,16 @@ updateWorkspaceConfig({
 ### Using with TypeScript Compiler
 
 ```typescript
-import { createProject, saveProject } from '@mutates/core';
 import ts from 'typescript';
+
+import { createProject, saveProject } from '@mutates/core';
 
 // Create project with custom compiler options
 createProject({
   compilerOptions: {
     target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.ESNext
-  }
+    module: ts.ModuleKind.ESNext,
+  },
 });
 ```
 
@@ -159,21 +164,22 @@ module.exports = {
                     createProject();
                     // Your transformations...
                     saveProject();
-                  }
-                ]
-              })
-            }
-          }
-        ]
-      }
-    ]
-  }
+                  },
+                ],
+              }),
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
 ```
 
 ## Best Practices
 
 1. **Framework-Specific Patterns**
+
 ```typescript
 // Angular-specific pattern matching
 getComponents({ pattern: 'src/**/*.component.ts' });
@@ -183,6 +189,7 @@ getLibraries({ pattern: 'libs/**/*.ts' });
 ```
 
 2. **Error Handling**
+
 ```typescript
 import { createAngularProject, getComponents } from '@mutates/angular';
 import { resetActiveProject } from '@mutates/core';
@@ -199,6 +206,7 @@ try {
 ```
 
 3. **Framework Version Compatibility**
+
 ```typescript
 // Check framework version compatibility
 import { isCompatibleWithAngular } from '@mutates/angular';
@@ -222,8 +230,8 @@ migrateToStandalone(components);
 ### Cross-Framework Operations
 
 ```typescript
-import { createProject } from '@mutates/core';
 import { getComponents } from '@mutates/angular';
+import { createProject } from '@mutates/core';
 import { updateProjectConfig } from '@mutates/nx';
 
 // Combine different framework operations

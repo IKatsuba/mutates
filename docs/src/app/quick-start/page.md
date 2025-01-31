@@ -6,9 +6,8 @@ nextjs:
     description: 'Get started quickly with Mutates for TypeScript code transformation'
 ---
 
-# Quick Start Guide
-
-This guide will help you get up and running with Mutates in minutes. You'll learn how to install the package and perform basic code transformations.
+This guide will help you get up and running with Mutates in minutes. You'll learn how to install the
+package and perform basic code transformations.
 
 ## Installation
 
@@ -33,7 +32,7 @@ npm install @mutates/nx
 Here's a simple example that demonstrates the core functionality of Mutates:
 
 ```typescript
-import { createProject, createSourceFile, addClasses, saveProject } from '@mutates/core';
+import { addClasses, createProject, createSourceFile, saveProject } from '@mutates/core';
 
 // Initialize project
 createProject();
@@ -43,7 +42,7 @@ createSourceFile(
   'src/user.ts',
   `
   // Initial empty file
-  `
+  `,
 );
 
 // Add a class
@@ -53,20 +52,20 @@ addClasses('src/user.ts', {
   properties: [
     {
       name: 'id',
-      type: 'number'
+      type: 'number',
     },
     {
       name: 'name',
-      type: 'string'
-    }
+      type: 'string',
+    },
   ],
   methods: [
     {
       name: 'greet',
       returnType: 'string',
-      statements: 'return `Hello, ${this.name}!`;'
-    }
-  ]
+      statements: 'return `Hello, ${this.name}!`;',
+    },
+  ],
 });
 
 // Save changes
@@ -77,12 +76,12 @@ This will generate a file with the following content:
 
 ```typescript
 export class User {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 
-    greet(): string {
-        return `Hello, ${this.name}!`;
-    }
+  greet(): string {
+    return `Hello, ${this.name}!`;
+  }
 }
 ```
 
@@ -91,7 +90,7 @@ export class User {
 ### Finding and Modifying Classes
 
 ```typescript
-import { getClasses, editClasses } from '@mutates/core';
+import { editClasses, getClasses } from '@mutates/core';
 
 // Find classes
 const classes = getClasses({ pattern: 'src/**/*.ts' });
@@ -99,7 +98,7 @@ const classes = getClasses({ pattern: 'src/**/*.ts' });
 // Modify them
 editClasses(classes, () => ({
   isExported: true,
-  extends: 'BaseClass'
+  extends: 'BaseClass',
 }));
 ```
 
@@ -113,10 +112,10 @@ addMethods(targetClass, {
   parameters: [
     {
       name: 'name',
-      type: 'string'
-    }
+      type: 'string',
+    },
   ],
-  statements: 'console.log(`Hello, ${name}!`);'
+  statements: 'console.log(`Hello, ${name}!`);',
 });
 ```
 
@@ -127,7 +126,7 @@ import { addImports } from '@mutates/core';
 
 addImports('src/example.ts', {
   namedImports: ['Injectable'],
-  moduleSpecifier: '@angular/core'
+  moduleSpecifier: '@angular/core',
 });
 ```
 
@@ -146,12 +145,14 @@ createAngularProject();
 addComponent('src/app/features', {
   name: 'UserList',
   template: '<ul><li *ngFor="let user of users">{{user.name}}</li></ul>',
-  styles: [`
+  styles: [
+    `
     :host {
       display: block;
       margin: 1rem;
     }
-  `]
+  `,
+  ],
 });
 
 // Save changes
@@ -161,8 +162,8 @@ saveProject();
 ### Nx Example
 
 ```typescript
-import { createNxProject } from '@mutates/nx';
 import { saveProject } from '@mutates/core';
+import { createNxProject } from '@mutates/nx';
 
 // Initialize Nx project
 createNxProject();
@@ -170,7 +171,7 @@ createNxProject();
 // Add library
 addLibrary({
   name: 'shared-utils',
-  directory: 'libs/shared'
+  directory: 'libs/shared',
 });
 
 // Save changes
@@ -180,6 +181,7 @@ saveProject();
 ## Best Practices
 
 1. **Always Initialize Project**
+
 ```typescript
 import { createProject } from '@mutates/core';
 
@@ -187,6 +189,7 @@ createProject();
 ```
 
 2. **Use Try-Finally**
+
 ```typescript
 import { createProject, resetActiveProject } from '@mutates/core';
 
@@ -199,6 +202,7 @@ try {
 ```
 
 3. **Save Changes**
+
 ```typescript
 import { saveProject } from '@mutates/core';
 
@@ -211,9 +215,9 @@ saveProject();
 ```typescript
 try {
   createProject();
-  
+
   // Your transformations...
-  
+
   saveProject();
 } catch (error) {
   console.error('Failed to transform code:', error);

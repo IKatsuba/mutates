@@ -6,8 +6,6 @@ nextjs:
     description: How to contribute to the Mutates project.
 ---
 
-# Contributing to Mutates
-
 We're thrilled that you're interested in contributing to Mutates! This document provides guidelines
 and information about how to contribute to our project.
 

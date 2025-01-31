@@ -6,8 +6,6 @@ nextjs:
     description: Learn how to use Mutates with Angular projects
 ---
 
-# @mutates/angular
-
 🌟 **@mutates/angular** is a specialized package within the Mutates toolset, offering powerful tools
 to mutate the Abstract Syntax Tree (AST) of Angular projects. Built on top of `@mutates/core`, this
 package provides Angular-specific transformations, making it easier to work with Angular components,
@@ -55,21 +53,23 @@ saveProject();
 Find and modify Angular components:
 
 ```typescript
-import { getComponents, editComponents, addProviders } from '@mutates/angular';
+import { addProviders, editComponents, getComponents } from '@mutates/angular';
 
 // Find components
 const components = getComponents({
-  pattern: 'src/**/*.component.ts'
+  pattern: 'src/**/*.component.ts',
 });
 
 // Modify components
 editComponents(components, () => ({
   changeDetection: 'ChangeDetectionStrategy.OnPush',
-  styles: [`
+  styles: [
+    `
     :host {
       display: block;
     }
-  `]
+  `,
+  ],
 }));
 
 // Add providers
@@ -81,14 +81,14 @@ addProviders(components, ['MyService']);
 Manipulate Angular modules:
 
 ```typescript
-import { getModules, addImports, addDeclarations } from '@mutates/angular';
+import { addDeclarations, addImports, getModules } from '@mutates/angular';
 
 const modules = getModules();
 
 // Add imports
 addImports(modules, {
   namedImports: ['CommonModule'],
-  moduleSpecifier: '@angular/common'
+  moduleSpecifier: '@angular/common',
 });
 
 // Add declarations
@@ -102,7 +102,7 @@ addDeclarations(modules, ['MyComponent']);
 Convert NgModule-based components to standalone:
 
 ```typescript
-import { migrateToStandalone, getComponents } from '@mutates/angular';
+import { getComponents, migrateToStandalone } from '@mutates/angular';
 
 const components = getComponents();
 migrateToStandalone(components);
@@ -119,13 +119,13 @@ import { addInjectionToken, editProviders } from '@mutates/angular';
 addInjectionToken('src/app/tokens.ts', {
   name: 'API_URL',
   type: 'string',
-  value: '"https://api.example.com"'
+  value: '"https://api.example.com"',
 });
 
 // Edit providers
 editProviders(targetModule, (providers) => [
   ...providers,
-  { provide: 'API_URL', useValue: 'https://api.example.com' }
+  { provide: 'API_URL', useValue: 'https://api.example.com' },
 ]);
 ```
 
@@ -141,7 +141,7 @@ editComponents(components, () => ({
     <div *ngIf="data$ | async as data">
       {{ data | json }}
     </div>
-  `
+  `,
 }));
 ```
 
@@ -158,12 +158,12 @@ const modules = getModules();
 addImports(modules, [
   {
     namedImports: ['MatButtonModule'],
-    moduleSpecifier: '@angular/material/button'
+    moduleSpecifier: '@angular/material/button',
   },
   {
     namedImports: ['MatInputModule'],
-    moduleSpecifier: '@angular/material/input'
-  }
+    moduleSpecifier: '@angular/material/input',
+  },
 ]);
 ```
 
@@ -182,10 +182,10 @@ addRoutes(modules, [
     children: [
       {
         path: ':id',
-        component: 'UserDetailComponent'
-      }
-    ]
-  }
+        component: 'UserDetailComponent',
+      },
+    ],
+  },
 ]);
 ```
 
@@ -201,16 +201,16 @@ addServices('src/app/services', {
     {
       name: 'getData',
       returnType: 'Observable<any>',
-      statements: 'return this.http.get("/api/data");'
-    }
+      statements: 'return this.http.get("/api/data");',
+    },
   ],
   constructorParameters: [
     {
       name: 'http',
       type: 'HttpClient',
-      accessModifier: 'private'
-    }
-  ]
+      accessModifier: 'private',
+    },
+  ],
 });
 ```
 
@@ -254,8 +254,8 @@ try {
 Create tests for your transformations:
 
 ```typescript
+import { addProviders, getComponents } from '@mutates/angular';
 import { createTestingProject } from '@mutates/core/testing';
-import { getComponents, addProviders } from '@mutates/angular';
 
 describe('Angular Transformations', () => {
   beforeEach(() => {
@@ -289,6 +289,7 @@ Create custom schematics:
 
 ```typescript
 import { Rule } from '@angular-devkit/schematics';
+
 import { createAngularProject } from '@mutates/angular';
 
 export function customSchematic(): Rule {

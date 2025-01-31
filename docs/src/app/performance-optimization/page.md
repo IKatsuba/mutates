@@ -3,12 +3,13 @@ title: 'Performance Optimization'
 nextjs:
   metadata:
     title: 'Performance Optimization'
-    description: 'Learn how to optimize performance when using Mutates for large-scale code transformations'
+    description:
+      'Learn how to optimize performance when using Mutates for large-scale code transformations'
 ---
 
-# Performance Optimization
-
-When working with large codebases or performing complex transformations, it's important to optimize your Mutates operations for better performance. This guide covers various techniques and best practices for optimizing performance.
+When working with large codebases or performing complex transformations, it's important to optimize
+your Mutates operations for better performance. This guide covers various techniques and best
+practices for optimizing performance.
 
 ## Memory Management
 
@@ -26,7 +27,7 @@ const allFiles = getSourceFiles();
 for (let i = 0; i < allFiles.length; i += batchSize) {
   const batch = allFiles.slice(i, i + batchSize);
   batch.forEach(processNode);
-  
+
   // Optional: Force garbage collection between batches
   if (global.gc) {
     global.gc();
@@ -44,7 +45,7 @@ const allFiles = getSourceFiles();
 
 // ✅ Good: Load only relevant files
 const serviceFiles = getSourceFiles({
-  pattern: 'src/**/*.service.ts'
+  pattern: 'src/**/*.service.ts',
 });
 ```
 
@@ -77,7 +78,7 @@ const transformCache = new Map<string, TransformResult>();
 
 function transformWithCache(node: Node): TransformResult {
   const key = node.getId();
-  
+
   if (transformCache.has(key)) {
     return transformCache.get(key)!;
   }
@@ -132,7 +133,7 @@ import { createProject } from '@mutates/core';
 createProject({
   skipFileDependencyResolution: true,
   skipLoadingLibFiles: true,
-  useInMemoryFileSystem: true
+  useInMemoryFileSystem: true,
 });
 ```
 
@@ -144,8 +145,8 @@ Only load necessary dependencies:
 createProject({
   compilerOptions: {
     types: ['node'], // Only include required types
-    skipLibCheck: true
-  }
+    skipLibCheck: true,
+  },
 });
 ```
 
@@ -161,20 +162,20 @@ import { Worker } from 'worker_threads';
 async function processInParallel(files: string[]) {
   const workerCount = 4;
   const batchSize = Math.ceil(files.length / workerCount);
-  
+
   const workers = Array.from({ length: workerCount }, (_, i) => {
     const start = i * batchSize;
     const end = start + batchSize;
     const batch = files.slice(start, end);
-    
+
     return new Promise((resolve) => {
       const worker = new Worker('./transform.worker.js', {
-        workerData: { files: batch }
+        workerData: { files: batch },
       });
       worker.on('message', resolve);
     });
   });
-  
+
   return Promise.all(workers);
 }
 ```
@@ -214,7 +215,7 @@ function logMemoryUsage() {
   const used = process.memoryUsage();
   console.log({
     heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)} MB`,
-    heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)} MB`
+    heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)} MB`,
   });
 }
 ```
@@ -222,6 +223,7 @@ function logMemoryUsage() {
 ## Best Practices
 
 1. **Clean Up Resources**
+
 ```typescript
 try {
   // Operations...
@@ -232,6 +234,7 @@ try {
 ```
 
 2. **Lazy Loading**
+
 ```typescript
 // Load transformations only when needed
 const transformations = new Map<string, () => Transformation>();
@@ -245,6 +248,7 @@ function getTransformation(type: string) {
 ```
 
 3. **Incremental Processing**
+
 ```typescript
 function processIncrementally(nodes: Node[]) {
   let processed = 0;
@@ -257,7 +261,7 @@ function processIncrementally(nodes: Node[]) {
         return { done: false, value: processed / total };
       }
       return { done: true, value: 1 };
-    }
+    },
   };
 }
 ```
@@ -265,16 +269,19 @@ function processIncrementally(nodes: Node[]) {
 ## Common Pitfalls
 
 1. **Memory Leaks**
+
 - Always clean up resources
 - Monitor memory usage
 - Use weak references when appropriate
 
 2. **Unnecessary Operations**
+
 - Avoid redundant transformations
 - Cache expensive computations
 - Use selective loading
 
 3. **Synchronous Bottlenecks**
+
 - Use async operations when possible
 - Implement parallel processing
 - Break up large operations

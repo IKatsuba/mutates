@@ -6,39 +6,38 @@ nextjs:
     description: 'Learn advanced techniques and patterns for using Mutates effectively'
 ---
 
-# Advanced Usage
-
-This guide covers advanced techniques and patterns for using Mutates effectively in complex scenarios.
+This guide covers advanced techniques and patterns for using Mutates effectively in complex
+scenarios.
 
 ## Complex Transformations
 
 ### Chaining Operations
 
 ```typescript
-import { getClasses, editClasses, addMethods, addProperties } from '@mutates/core';
+import { addMethods, addProperties, editClasses, getClasses } from '@mutates/core';
 
 // Find and transform classes in multiple steps
 const classes = getClasses({ pattern: 'src/**/*.ts' });
 
-classes.forEach(klass => {
+classes.forEach((klass) => {
   // First transformation
   editClasses(klass, () => ({
     isExported: true,
-    isAbstract: true
+    isAbstract: true,
   }));
 
   // Add methods
   addMethods(klass, {
     name: 'initialize',
     isAbstract: true,
-    returnType: 'Promise<void>'
+    returnType: 'Promise<void>',
   });
 
   // Add properties
   addProperties(klass, {
     name: 'isInitialized',
     type: 'boolean',
-    initializer: 'false'
+    initializer: 'false',
   });
 });
 ```
@@ -50,7 +49,7 @@ import { getClasses, Node } from '@mutates/core';
 
 const classes = getClasses();
 
-classes.forEach(klass => {
+classes.forEach((klass) => {
   // Check if class extends a specific base class
   const baseClass = klass.getBaseClass();
   if (baseClass && Node.isIdentifier(baseClass) && baseClass.getText() === 'BaseComponent') {
@@ -58,8 +57,7 @@ classes.forEach(klass => {
   }
 
   // Check for specific decorators
-  const hasInject = klass.getDecorators()
-    .some(d => d.getName() === 'Inject');
+  const hasInject = klass.getDecorators().some((d) => d.getName() === 'Inject');
   if (hasInject) {
     // Apply transformations for injectable classes
   }
@@ -107,8 +105,8 @@ addClasses('service.ts', {
   properties: [
     {
       name: 'items',
-      type: 'T[]'
-    }
+      type: 'T[]',
+    },
   ],
   methods: [
     {
@@ -117,17 +115,17 @@ addClasses('service.ts', {
       parameters: [
         {
           name: 'key',
-          type: 'K'
+          type: 'K',
         },
         {
           name: 'value',
-          type: 'T[K]'
-        }
+          type: 'T[K]',
+        },
       ],
       returnType: 'T | undefined',
-      statements: 'return this.items.find(item => item[key] === value);'
-    }
-  ]
+      statements: 'return this.items.find(item => item[key] === value);',
+    },
+  ],
 });
 ```
 
@@ -140,16 +138,12 @@ import { getClasses } from '@mutates/core';
 
 // Multiple patterns
 const classes = getClasses({
-  pattern: [
-    'src/**/*.service.ts',
-    'src/**/*.repository.ts',
-    '!src/**/*.spec.ts'
-  ]
+  pattern: ['src/**/*.service.ts', 'src/**/*.repository.ts', '!src/**/*.spec.ts'],
 });
 
 // Pattern with alternatives
 const components = getClasses({
-  pattern: 'src/**/*.(component|directive).ts'
+  pattern: 'src/**/*.(component|directive).ts',
 });
 ```
 
@@ -159,15 +153,15 @@ const components = getClasses({
 import { getClasses, Node } from '@mutates/core';
 
 // Find classes with specific characteristics
-const classes = getClasses().filter(klass => {
+const classes = getClasses().filter((klass) => {
   // Has specific method
-  const hasMethod = klass.getMethods()
-    .some(method => method.getName() === 'ngOnInit');
+  const hasMethod = klass.getMethods().some((method) => method.getName() === 'ngOnInit');
 
   // Has specific import
-  const hasImport = klass.getSourceFile()
+  const hasImport = klass
+    .getSourceFile()
     .getImportDeclarations()
-    .some(imp => imp.getModuleSpecifier().getText().includes('@angular/core'));
+    .some((imp) => imp.getModuleSpecifier().getText().includes('@angular/core'));
 
   return hasMethod && hasImport;
 });
@@ -186,7 +180,7 @@ addClasses('service.ts', {
     '/**',
     ' * Service for handling API communications',
     ' * @template T - The response data type',
-    ' */'
+    ' */',
   ],
   methods: [
     {
@@ -197,10 +191,10 @@ addClasses('service.ts', {
         ' * @param endpoint - The API endpoint',
         ' * @returns Promise with the response data',
         ' * @throws {ApiError} When the request fails',
-        ' */'
-      ]
-    }
-  ]
+        ' */',
+      ],
+    },
+  ],
 });
 ```
 
@@ -212,11 +206,11 @@ import { editClasses } from '@mutates/core';
 // Preserve existing comments while modifying code
 editClasses(targetClass, (structure) => ({
   ...structure,
-  methods: structure.methods?.map(method => ({
+  methods: structure.methods?.map((method) => ({
     ...method,
     // Preserve method documentation
-    docs: method.docs
-  }))
+    docs: method.docs,
+  })),
 }));
 ```
 
@@ -225,7 +219,7 @@ editClasses(targetClass, (structure) => ({
 ### Batch Processing
 
 ```typescript
-import { getClasses, editClasses, createProject, saveProject } from '@mutates/core';
+import { createProject, editClasses, getClasses, saveProject } from '@mutates/core';
 
 // Process files in batches
 createProject();
@@ -235,7 +229,7 @@ const batchSize = 100;
 
 for (let i = 0; i < allClasses.length; i += batchSize) {
   const batch = allClasses.slice(i, i + batchSize);
-  editClasses(batch, /* transformations */);
+  editClasses(batch /* transformations */);
 }
 
 saveProject();
@@ -251,14 +245,14 @@ const classCache = new Map<string, boolean>();
 
 function isEligibleForTransform(klass: Node) {
   const key = klass.getFilePath();
-  
+
   if (classCache.has(key)) {
     return classCache.get(key);
   }
 
   const isEligible = /* complex computation */;
   classCache.set(key, isEligible);
-  
+
   return isEligible;
 }
 ```
@@ -282,7 +276,7 @@ function validateClass(klass: Node) {
   }
 
   // Validate property types
-  klass.getProperties().forEach(prop => {
+  klass.getProperties().forEach((prop) => {
     const type = prop.getType();
     if (type.isAny()) {
       errors.push(`Property ${prop.getName()} has 'any' type`);
@@ -294,7 +288,7 @@ function validateClass(klass: Node) {
 
 // Use validation in transformations
 const classes = getClasses();
-classes.forEach(klass => {
+classes.forEach((klass) => {
   const errors = validateClass(klass);
   if (errors.length > 0) {
     console.error(`Validation failed for ${klass.getName()}:`, errors);

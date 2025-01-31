@@ -6,9 +6,9 @@ nextjs:
     description: How to install and use @mutates/core for TypeScript AST manipulation
 ---
 
-# @mutates/core
-
-@mutates/core is the foundation package of the Mutates toolset that provides essential functionality for manipulating TypeScript Abstract Syntax Trees (AST). This package serves as the backbone for other specialized packages in the Mutates ecosystem.
+@mutates/core is the foundation package of the Mutates toolset that provides essential functionality
+for manipulating TypeScript Abstract Syntax Trees (AST). This package serves as the backbone for
+other specialized packages in the Mutates ecosystem.
 
 ## Installation
 
@@ -25,7 +25,7 @@ The core package provides several key functionalities for AST manipulation:
 ### Project Management
 
 ```typescript
-import { createProject, saveProject, resetActiveProject } from '@mutates/core';
+import { createProject, resetActiveProject, saveProject } from '@mutates/core';
 
 // Create a new project
 createProject();
@@ -51,7 +51,7 @@ createSourceFile(
   export class Example {
     greeting: string = 'Hello World';
   }
-`
+`,
 );
 ```
 
@@ -60,16 +60,18 @@ createSourceFile(
 ### Class Manipulation
 
 ```typescript
-import { addClasses, getClasses, editClasses, removeClasses } from '@mutates/core';
+import { addClasses, editClasses, getClasses, removeClasses } from '@mutates/core';
 
 // Add a new class
 addClasses('path/to/file.ts', {
   name: 'MyClass',
   isExported: true,
-  methods: [{
-    name: 'myMethod',
-    statements: 'return true;'
-  }]
+  methods: [
+    {
+      name: 'myMethod',
+      statements: 'return true;',
+    },
+  ],
 });
 
 // Get existing classes
@@ -78,7 +80,7 @@ const classes = getClasses({ pattern: 'path/to/file.ts' });
 // Edit classes
 editClasses(classes, () => ({
   isExported: true,
-  name: 'UpdatedClassName'
+  name: 'UpdatedClassName',
 }));
 
 // Remove classes
@@ -88,13 +90,13 @@ removeClasses(classes);
 ### Function Operations
 
 ```typescript
-import { addFunctions, getFunctions, editFunctions, removeFunctions } from '@mutates/core';
+import { addFunctions, editFunctions, getFunctions, removeFunctions } from '@mutates/core';
 
 // Add a new function
 addFunctions('path/to/file.ts', {
   name: 'myFunction',
   isExported: true,
-  statements: 'return "Hello World";'
+  statements: 'return "Hello World";',
 });
 
 // Get existing functions
@@ -103,7 +105,7 @@ const functions = getFunctions({ pattern: 'path/to/file.ts' });
 // Edit functions
 editFunctions(functions, () => ({
   isAsync: true,
-  statements: 'return Promise.resolve("Hello");'
+  statements: 'return Promise.resolve("Hello");',
 }));
 
 // Remove functions
@@ -113,29 +115,31 @@ removeFunctions(functions);
 ### Property Management
 
 ```typescript
-import { addProperties, getProperties, editProperties, removeProperties } from '@mutates/core';
+import { addProperties, editProperties, getProperties, removeProperties } from '@mutates/core';
 
 // Add class properties
 addProperties(targetClass, {
   name: 'myProperty',
   type: 'string',
-  initializer: '"default value"'
+  initializer: '"default value"',
 });
 ```
 
 ### Method Operations
 
 ```typescript
-import { addMethods, getMethods, editMethods, removeMethods } from '@mutates/core';
+import { addMethods, editMethods, getMethods, removeMethods } from '@mutates/core';
 
 // Add class methods
 addMethods(targetClass, {
   name: 'myMethod',
-  parameters: [{
-    name: 'param',
-    type: 'string'
-  }],
-  statements: 'console.log(param);'
+  parameters: [
+    {
+      name: 'param',
+      type: 'string',
+    },
+  ],
+  statements: 'console.log(param);',
 });
 ```
 
@@ -147,7 +151,7 @@ import { addDecorators } from '@mutates/core';
 // Add decorators
 addDecorators(target, {
   name: 'MyDecorator',
-  arguments: ['arg1', 'arg2']
+  arguments: ['arg1', 'arg2'],
 });
 ```
 
@@ -156,7 +160,7 @@ addDecorators(target, {
 The package provides utilities for array manipulation:
 
 ```typescript
-import { pushToArray, removeFromArray, arrayIncludes } from '@mutates/core';
+import { arrayIncludes, pushToArray, removeFromArray } from '@mutates/core';
 
 // Add elements to array
 pushToArray(arrayExpression, 'newItem');
@@ -171,28 +175,33 @@ const hasItem = arrayIncludes(arrayExpression, 'searchItem');
 ## Best Practices
 
 1. Always create a project before making modifications:
+
 ```typescript
 createProject();
 ```
 
 2. Save changes after modifications:
+
 ```typescript
 saveProject();
 ```
 
 3. Clean up by resetting the project when done:
+
 ```typescript
 resetActiveProject();
 ```
 
 4. Use pattern matching to target specific files:
+
 ```typescript
 getClasses({ pattern: 'src/**/*.ts' });
 ```
 
 ## Error Handling
 
-The package throws descriptive errors when operations fail. It's recommended to wrap operations in try-catch blocks:
+The package throws descriptive errors when operations fail. It's recommended to wrap operations in
+try-catch blocks:
 
 ```typescript
 try {
@@ -220,4 +229,5 @@ try {
 - [Framework Integrations](/framework-integrations)
 - [API Reference](https://mutates.katsuba.dev/packages/core)
 
-For more examples and detailed API documentation, visit the [official documentation](https://mutates.katsuba.dev).
+For more examples and detailed API documentation, visit the
+[official documentation](https://mutates.katsuba.dev).

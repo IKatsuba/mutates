@@ -6,26 +6,33 @@ nextjs:
     description: 'Common questions and answers about using Mutates'
 ---
 
-# Frequently Asked Questions
-
 ## General Questions
 
 ### What is Mutates?
-Mutates is a toolkit for programmatically modifying TypeScript source code through AST manipulation. It provides a high-level API for common code transformation tasks.
+
+Mutates is a toolkit for programmatically modifying TypeScript source code through AST manipulation.
+It provides a high-level API for common code transformation tasks.
 
 ### How is Mutates different from other code modification tools?
-Mutates focuses specifically on TypeScript and provides a type-safe, high-level API. Unlike text-based tools, it understands the structure of your code and can make precise modifications while preserving formatting and comments.
+
+Mutates focuses specifically on TypeScript and provides a type-safe, high-level API. Unlike
+text-based tools, it understands the structure of your code and can make precise modifications while
+preserving formatting and comments.
 
 ## Installation and Setup
 
 ### Why am I getting TypeScript errors after installation?
+
 Ensure you have the correct peer dependencies installed:
+
 ```bash
 npm install typescript@^4.0.0
 ```
 
 ### Can I use Mutates with JavaScript files?
-Yes, Mutates can work with JavaScript files, but it's primarily designed for TypeScript. Some TypeScript-specific features won't be available when working with JavaScript.
+
+Yes, Mutates can work with JavaScript files, but it's primarily designed for TypeScript. Some
+TypeScript-specific features won't be available when working with JavaScript.
 
 ## Common Usage Questions
 
@@ -40,8 +47,8 @@ createProject({
   manipulationSettings: {
     indentationText: '  ',
     newLineKind: 'lf',
-    usePrefixAndSuffixTextForRename: true
-  }
+    usePrefixAndSuffixTextForRename: true,
+  },
 });
 ```
 
@@ -55,8 +62,8 @@ import { createProject } from '@mutates/core';
 createProject({
   compilerOptions: {
     allowJs: true,
-    allowCircularReferences: true
-  }
+    allowCircularReferences: true,
+  },
 });
 ```
 
@@ -68,7 +75,7 @@ Use pattern matching to target multiple files:
 import { getClasses } from '@mutates/core';
 
 const classes = getClasses({
-  pattern: ['src/**/*.ts', '!src/**/*.spec.ts']
+  pattern: ['src/**/*.ts', '!src/**/*.spec.ts'],
 });
 ```
 
@@ -105,6 +112,7 @@ try {
 ### How can I improve performance when processing many files?
 
 1. Use batch processing:
+
 ```typescript
 const batchSize = 100;
 for (let i = 0; i < files.length; i += batchSize) {
@@ -114,6 +122,7 @@ for (let i = 0; i < files.length; i += batchSize) {
 ```
 
 2. Use specific patterns instead of processing all files:
+
 ```typescript
 getClasses({ pattern: 'src/specific/path/**/*.ts' });
 ```
@@ -127,7 +136,7 @@ const cache = new Map();
 
 function getCachedResult(key: string) {
   if (!cache.has(key)) {
-    cache.set(key, /* expensive operation */);
+    cache.set(key /* expensive operation */);
   }
   return cache.get(key);
 }
@@ -138,11 +147,13 @@ function getCachedResult(key: string) {
 ### How do I use Mutates with Angular CLI?
 
 Install the Angular package:
+
 ```bash
 npm install @mutates/angular
 ```
 
 Then use Angular-specific features:
+
 ```typescript
 import { createAngularProject } from '@mutates/angular';
 
@@ -152,11 +163,13 @@ createAngularProject();
 ### Can I use Mutates with Nx?
 
 Yes, install the Nx package:
+
 ```bash
 npm install @mutates/nx
 ```
 
 Use Nx-specific features:
+
 ```typescript
 import { createNxProject } from '@mutates/nx';
 
@@ -168,6 +181,7 @@ createNxProject();
 ### Should I commit generated files?
 
 Generally, no. Add generated files to `.gitignore`:
+
 ```gitignore
 # Generated files
 *.generated.ts
@@ -184,7 +198,7 @@ describe('transformations', () => {
   beforeEach(() => {
     createTestingProject();
   });
-  
+
   it('should transform correctly', () => {
     // Your test code
   });
@@ -196,11 +210,13 @@ describe('transformations', () => {
 ### Common Issues and Solutions
 
 1. **Files not being found**
+
    - Check file patterns
    - Ensure paths are relative to project root
    - Verify file extensions
 
 2. **Changes not being saved**
+
    - Make sure to call `saveProject()`
    - Check write permissions
    - Verify output paths
@@ -213,20 +229,23 @@ describe('transformations', () => {
 ### Debug Tips
 
 1. Print AST structure:
+
 ```typescript
 console.log(node.getStructure());
 ```
 
 2. Check node types:
+
 ```typescript
 console.log(Node.isClassDeclaration(node));
 ```
 
 3. Enable verbose logging:
+
 ```typescript
 createProject({
   skipFileDependencyResolution: false,
-  skipLoadingLibFiles: false
+  skipLoadingLibFiles: false,
 });
 ```
 
@@ -236,4 +255,5 @@ createProject({
 - [API Documentation](https://mutates.katsuba.dev)
 - [Example Projects](https://github.com/ikatsuba/mutates/tree/main/examples)
 
-Still have questions? Feel free to [open an issue](https://github.com/ikatsuba/mutates/issues/new) on GitHub.
+Still have questions? Feel free to [open an issue](https://github.com/ikatsuba/mutates/issues/new)
+on GitHub.

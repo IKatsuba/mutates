@@ -6,8 +6,6 @@ nextjs:
     description: 'Learn the fundamental concepts and basic usage of Mutates'
 ---
 
-# Basic Usage
-
 This guide will walk you through the fundamental concepts and basic usage of Mutates.
 
 ## Project Setup
@@ -40,7 +38,7 @@ createSourceFile(
   export class Example {
     constructor() {}
   }
-  `
+  `,
 );
 ```
 
@@ -56,16 +54,16 @@ addClasses('src/example.ts', {
     {
       name: 'value',
       type: 'string',
-      initializer: '"default"'
-    }
-  ]
+      initializer: '"default"',
+    },
+  ],
 });
 ```
 
 ### Modifying Existing Code
 
 ```typescript
-import { getClasses, editClasses } from '@mutates/core';
+import { editClasses, getClasses } from '@mutates/core';
 
 // Find classes
 const classes = getClasses({ pattern: 'src/**/*.ts' });
@@ -73,7 +71,7 @@ const classes = getClasses({ pattern: 'src/**/*.ts' });
 // Modify them
 editClasses(classes, (structure) => ({
   ...structure,
-  isExported: true
+  isExported: true,
 }));
 ```
 
@@ -88,7 +86,7 @@ addFunctions('src/utils.ts', {
   name: 'helper',
   parameters: [{ name: 'value', type: 'string' }],
   returnType: 'string',
-  statements: 'return value.toUpperCase();'
+  statements: 'return value.toUpperCase();',
 });
 ```
 
@@ -100,13 +98,14 @@ import { addProperties } from '@mutates/core';
 addProperties(targetClass, {
   name: 'config',
   type: 'Configuration',
-  hasQuestionToken: true
+  hasQuestionToken: true,
 });
 ```
 
 ## Best Practices
 
 1. Always wrap operations in try-catch:
+
 ```typescript
 try {
   createProject();
@@ -118,11 +117,13 @@ try {
 ```
 
 2. Use pattern matching effectively:
+
 ```typescript
 getClasses({ pattern: 'src/**/*service.ts' });
 ```
 
 3. Clean up resources:
+
 ```typescript
 import { resetActiveProject } from '@mutates/core';
 

@@ -6,13 +6,13 @@ nextjs:
     description: 'Learn about Abstract Syntax Trees and how Mutates uses them'
 ---
 
-# Understanding Abstract Syntax Trees (AST)
-
-An Abstract Syntax Tree (AST) is a tree representation of the syntactic structure of source code. Understanding ASTs is crucial for effectively using Mutates to transform TypeScript code.
+An Abstract Syntax Tree (AST) is a tree representation of the syntactic structure of source code.
+Understanding ASTs is crucial for effectively using Mutates to transform TypeScript code.
 
 ## What is an AST?
 
-An AST represents code as a hierarchical structure where each node represents a construct in the source code. For example:
+An AST represents code as a hierarchical structure where each node represents a construct in the
+source code. For example:
 
 ```typescript
 // Source Code
@@ -80,7 +80,8 @@ for (let i = 0; i < 10; i++) {
 
 ## How Mutates Uses ASTs
 
-Mutates provides a high-level API to manipulate TypeScript ASTs without dealing with the raw tree structure directly.
+Mutates provides a high-level API to manipulate TypeScript ASTs without dealing with the raw tree
+structure directly.
 
 ### Example: Adding a Class
 
@@ -141,7 +142,7 @@ import { editClasses } from '@mutates/core';
 // Modify class properties
 editClasses(classes, (structure) => ({
   ...structure,
-  isExported: true
+  isExported: true,
 }));
 ```
 
@@ -153,7 +154,7 @@ import { addMethods } from '@mutates/core';
 // Add methods to a class
 addMethods(targetClass, {
   name: 'newMethod',
-  statements: 'return true;'
+  statements: 'return true;',
 });
 ```
 
@@ -162,6 +163,7 @@ addMethods(targetClass, {
 1. **Preserve Semantics**: Ensure your transformations maintain the original code's meaning.
 
 2. **Handle Edge Cases**: Consider different code structures that might exist:
+
 ```typescript
 // Different ways to declare a class
 class A {}

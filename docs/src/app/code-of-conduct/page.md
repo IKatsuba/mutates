@@ -1,4 +1,10 @@
-# Code of Conduct
+---
+title: 'Code of Conduct'
+nextjs:
+  metadata:
+    title: 'Code of Conduct'
+    description: 'Learn the code of conduct for the Mutates community'
+---
 
 As a community of developers, we strive to create a friendly, safe, and welcoming environment for
 all, regardless of experience level, gender, gender identity and expression, sexual orientation,

@@ -6,8 +6,6 @@ nextjs:
     description: 'Learn about the fundamental operations available in Mutates'
 ---
 
-# Basic Operations
-
 This guide covers the fundamental operations available in Mutates for manipulating TypeScript code.
 
 ## File Operations
@@ -24,7 +22,7 @@ createSourceFile(
   export class Example {
     message: string = 'Hello World';
   }
-  `
+  `,
 );
 ```
 
@@ -51,13 +49,13 @@ addClasses('src/models.ts', {
   properties: [
     {
       name: 'id',
-      type: 'number'
+      type: 'number',
     },
     {
       name: 'name',
-      type: 'string'
-    }
-  ]
+      type: 'string',
+    },
+  ],
 });
 ```
 
@@ -71,12 +69,12 @@ const allClasses = getClasses();
 
 // Find classes by pattern
 const modelClasses = getClasses({
-  pattern: 'src/models/**/*.ts'
+  pattern: 'src/models/**/*.ts',
 });
 
 // Find classes by name
 const userClass = getClasses({
-  name: 'User'
+  name: 'User',
 });
 ```
 
@@ -88,7 +86,7 @@ import { editClasses } from '@mutates/core';
 // Modify classes
 editClasses(targetClasses, () => ({
   isExported: true,
-  implements: ['Serializable']
+  implements: ['Serializable'],
 }));
 ```
 
@@ -114,11 +112,11 @@ addMethods(targetClass, {
   parameters: [
     {
       name: 'name',
-      type: 'string'
-    }
+      type: 'string',
+    },
   ],
   returnType: 'string',
-  statements: 'return `Hello, ${name}!`;'
+  statements: 'return `Hello, ${name}!`;',
 });
 ```
 
@@ -132,7 +130,7 @@ const methods = getMethods(targetClasses);
 
 // Get specific methods
 const getters = getMethods(targetClasses, {
-  isGetter: true
+  isGetter: true,
 });
 ```
 
@@ -144,7 +142,7 @@ import { editMethods } from '@mutates/core';
 // Modify methods
 editMethods(methods, () => ({
   isAsync: true,
-  returnType: 'Promise<string>'
+  returnType: 'Promise<string>',
 }));
 ```
 
@@ -160,13 +158,13 @@ addProperties(targetClass, [
   {
     name: 'count',
     type: 'number',
-    initializer: '0'
+    initializer: '0',
   },
   {
     name: 'isActive',
     type: 'boolean',
-    hasQuestionToken: true
-  }
+    hasQuestionToken: true,
+  },
 ]);
 ```
 
@@ -180,7 +178,7 @@ const properties = getProperties(targetClasses);
 
 // Get specific properties
 const optionalProps = getProperties(targetClasses, {
-  hasQuestionToken: true
+  hasQuestionToken: true,
 });
 ```
 
@@ -194,10 +192,12 @@ import { addDecorators } from '@mutates/core';
 // Add decorators to a class
 addDecorators(targetClass, {
   name: 'Component',
-  arguments: [{
-    selector: 'app-root',
-    template: '<div>Hello</div>'
-  }]
+  arguments: [
+    {
+      selector: 'app-root',
+      template: '<div>Hello</div>',
+    },
+  ],
 });
 ```
 
@@ -211,13 +211,13 @@ import { addImports } from '@mutates/core';
 // Add imports to a file
 addImports('src/example.ts', {
   namedImports: ['Component', 'Input'],
-  moduleSpecifier: '@angular/core'
+  moduleSpecifier: '@angular/core',
 });
 
 // Add default import
 addImports('src/example.ts', {
   defaultImport: 'React',
-  moduleSpecifier: 'react'
+  moduleSpecifier: 'react',
 });
 ```
 
@@ -231,12 +231,12 @@ import { addExports } from '@mutates/core';
 // Add named exports
 addExports('src/index.ts', {
   namedExports: ['User', 'Admin'],
-  moduleSpecifier: './models'
+  moduleSpecifier: './models',
 });
 
 // Add default export
 addExports('src/main.ts', {
-  defaultExport: 'App'
+  defaultExport: 'App',
 });
 ```
 
@@ -276,30 +276,33 @@ import { addTypeAliases } from '@mutates/core';
 addTypeAliases('src/types.ts', {
   name: 'UserId',
   type: 'string | number',
-  isExported: true
+  isExported: true,
 });
 ```
 
 ## Best Practices
 
 1. **Group Related Operations**
+
 ```typescript
 // Group related transformations
 const userClass = getClasses({ name: 'User' })[0];
-addProperties(userClass, /* properties */);
-addMethods(userClass, /* methods */);
-addDecorators(userClass, /* decorators */);
+addProperties(userClass /* properties */);
+addMethods(userClass /* methods */);
+addDecorators(userClass /* decorators */);
 ```
 
 2. **Use Pattern Matching Effectively**
+
 ```typescript
 // Be specific with patterns
 const serviceClasses = getClasses({
-  pattern: 'src/**/*.service.ts'
+  pattern: 'src/**/*.service.ts',
 });
 ```
 
 3. **Handle Errors**
+
 ```typescript
 try {
   // Your operations

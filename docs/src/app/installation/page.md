@@ -6,9 +6,8 @@ nextjs:
     description: Learn how to install Mutates packages and get started
 ---
 
-# Installation Guide
-
-Mutates is distributed as several npm packages, each serving a specific purpose. Here's how to get started with the different packages:
+Mutates is distributed as several npm packages, each serving a specific purpose. Here's how to get
+started with the different packages:
 
 ## Core Package
 
@@ -55,7 +54,8 @@ createProject();
 
 ## Package Versions
 
-It's recommended to use the same version for all @mutates packages in your project to ensure compatibility.
+It's recommended to use the same version for all @mutates packages in your project to ensure
+compatibility.
 
 ## Next Steps
 
@@ -70,11 +70,13 @@ After installation, you can:
 If you encounter any installation issues:
 
 1. Clear your npm cache:
+
    ```bash
    npm cache clean --force
    ```
 
 2. Make sure your Node.js version is compatible:
+
    ```bash
    node --version
    ```

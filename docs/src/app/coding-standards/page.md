@@ -6,8 +6,6 @@ nextjs:
     description: 'Learn about the coding standards of `mutates`.'
 ---
 
-# Coding Standards
-
 Welcome to the coding standards for the `mutates` project. This document outlines the guidelines and
 best practices for contributing to the codebase.
 

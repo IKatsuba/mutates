@@ -6,9 +6,8 @@ nextjs:
     description: Learn how to use Mutates with Nx workspaces
 ---
 
-# @mutates/nx
-
-The `@mutates/nx` package extends Mutates functionality to work seamlessly with Nx workspaces, providing tools for manipulating Nx project configurations and workspace files.
+The `@mutates/nx` package extends Mutates functionality to work seamlessly with Nx workspaces,
+providing tools for manipulating Nx project configurations and workspace files.
 
 ## Installation
 
@@ -25,8 +24,8 @@ npm install @mutates/nx @mutates/core
 Initialize an Nx project with Mutates:
 
 ```typescript
-import { createNxProject } from '@mutates/nx';
 import { saveProject } from '@mutates/core';
+import { createNxProject } from '@mutates/nx';
 
 // Create project with Nx support
 createNxProject();
@@ -51,10 +50,10 @@ editProjectConfiguration('my-app', {
       executor: '@nx/webpack:webpack',
       options: {
         outputPath: 'dist/apps/my-app',
-        main: 'apps/my-app/src/main.ts'
-      }
-    }
-  }
+        main: 'apps/my-app/src/main.ts',
+      },
+    },
+  },
 });
 ```
 
@@ -66,7 +65,7 @@ import { addProjectDependencies } from '@mutates/nx';
 // Add project dependencies
 addProjectDependencies('my-app', {
   dependencies: ['shared-lib'],
-  type: 'implicit' // or 'explicit'
+  type: 'implicit', // or 'explicit'
 });
 ```
 
@@ -84,9 +83,9 @@ updateWorkspaceConfig({
   generators: {
     '@nx/angular:application': {
       style: 'scss',
-      strict: true
-    }
-  }
+      strict: true,
+    },
+  },
 });
 ```
 
@@ -110,7 +109,7 @@ import { addLibrary } from '@mutates/nx';
 addLibrary({
   name: 'shared-utils',
   directory: 'libs/shared',
-  tags: ['utils', 'shared']
+  tags: ['utils', 'shared'],
 });
 ```
 
@@ -122,7 +121,7 @@ import { editLibrary } from '@mutates/nx';
 // Modify library configuration
 editLibrary('shared-utils', {
   buildable: true,
-  publishable: true
+  publishable: true,
 });
 ```
 
@@ -137,7 +136,7 @@ import { addApplication } from '@mutates/nx';
 addApplication({
   name: 'admin-portal',
   directory: 'apps/admin',
-  tags: ['admin', 'frontend']
+  tags: ['admin', 'frontend'],
 });
 ```
 
@@ -149,7 +148,7 @@ import { editApplication } from '@mutates/nx';
 // Update application configuration
 editApplication('admin-portal', {
   strict: true,
-  standalone: true
+  standalone: true,
 });
 ```
 
@@ -164,7 +163,7 @@ import { updateGeneratorDefaults } from '@mutates/nx';
 updateGeneratorDefaults('@nx/angular:component', {
   style: 'scss',
   changeDetection: 'OnPush',
-  standalone: true
+  standalone: true,
 });
 ```
 
@@ -180,13 +179,13 @@ setupModuleBoundaries({
   enforce: [
     {
       sourceTag: 'type:feature',
-      onlyDependOnLibsWithTags: ['type:shared', 'type:util']
+      onlyDependOnLibsWithTags: ['type:shared', 'type:util'],
     },
     {
       sourceTag: 'scope:admin',
-      notDependOnLibsWithTags: ['scope:public']
-    }
-  ]
+      notDependOnLibsWithTags: ['scope:public'],
+    },
+  ],
 });
 ```
 
@@ -199,7 +198,7 @@ import { updateBuildTarget } from '@mutates/nx';
 updateBuildTarget('my-app', {
   optimization: true,
   sourceMap: false,
-  extractLicenses: true
+  extractLicenses: true,
 });
 ```
 
@@ -222,8 +221,8 @@ getApplications({ pattern: 'apps/**/*.ts' });
 Wrap Nx operations in try-catch:
 
 ```typescript
-import { createNxProject } from '@mutates/nx';
 import { resetActiveProject } from '@mutates/core';
+import { createNxProject } from '@mutates/nx';
 
 try {
   createNxProject();
@@ -240,14 +239,14 @@ try {
 ### Angular Integration
 
 ```typescript
-import { createNxProject } from '@mutates/nx';
 import { addAngularLibrary } from '@mutates/angular';
+import { createNxProject } from '@mutates/nx';
 
 // Combine Nx and Angular operations
 createNxProject();
 addAngularLibrary({
   name: 'feature-auth',
-  directory: 'libs/features'
+  directory: 'libs/features',
 });
 ```
 
@@ -261,8 +260,8 @@ updateTestTarget('my-app', {
   executor: '@nx/jest:jest',
   options: {
     jestConfig: 'apps/my-app/jest.config.ts',
-    passWithNoTests: true
-  }
+    passWithNoTests: true,
+  },
 });
 ```
 
