@@ -290,7 +290,7 @@ whole stack exists.
   - Create `packages/cli/README.md` covering install, the snapshot/act/re-snapshot loop, link to `mutates skills get core` for the full guide.
   - _Requirements: (none — discoverability)_
 
-- [ ] 33. Final checkpoint — everything green
+- [x] 33. Final checkpoint — everything green
   - Full workspace test: `npx nx run-many -t test`.
   - Full workspace build: `npx nx run-many -t build`.
   - Manual: `dist/packages/cli/bin/mutates.js --help` prints the full lazy-loaded command tree.
