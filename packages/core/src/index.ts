@@ -15,6 +15,7 @@ export * from './lib/params';
 export * from './lib/project';
 export * from './lib/properties';
 export * from './lib/source-file';
+export * from './lib/type-aliases';
 export * from './lib/utils';
 export * from './lib/variables';
 export * from 'ts-morph';
