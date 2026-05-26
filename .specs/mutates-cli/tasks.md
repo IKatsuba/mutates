@@ -103,7 +103,7 @@ mutation. The daemon dispatcher rejects every other method with
   - Integration test `daemon/dispatcher.spec.ts`: instantiate `net.createServer` with a `Duplex` socket pair (no real subprocess), drive `session.open` → `list` → `close`, assert idle timer fires by overriding the timeout to 50ms.
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.6, 10.1, 10.3_
 
-- [ ] 8. RpcClient + spawn/discover
+- [x] 8. RpcClient + spawn/discover
   - Create `packages/cli/src/client/rpc-client.ts` with `connect({ root, sessionId? }): Promise<Connection>`: reads lockfile; on miss or stale, spawns `node $entry --root <root> --sock <derived>` via `child_process.spawn` with `detached:true, stdio:'ignore', windowsHide:true`; polls for the socket (≤2s, 50ms intervals); connects; performs handshake (`session.open` if no `sessionId` passed; otherwise validates `sessionId` exists via `session.list`, throws `SessionNotFound` if not).
   - `Connection.call(method, params)`: write a framed `RpcRequest`, await response with matching id, throw `RpcError` on `error`.
   - Create `packages/cli/src/client/output.ts` with `renderError(err: RpcError)` and `renderResult(result, format: 'text' | 'json')` helpers — every command will route through these for the stdout/stderr split required by Req 8.4.
