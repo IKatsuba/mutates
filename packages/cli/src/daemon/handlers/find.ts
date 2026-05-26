@@ -5,7 +5,6 @@ import {
   getFunctions,
   getImports,
   getInterfaces,
-  getTypeAliases,
   getVariables,
   type Node,
 } from '@mutates/core';
@@ -24,7 +23,6 @@ const FINDERS: Record<string, (query?: Record<string, unknown>) => Node[]> = {
   function: getFunctions as unknown as (q?: Record<string, unknown>) => Node[],
   interface: getInterfaces as unknown as (q?: Record<string, unknown>) => Node[],
   enum: getEnums as unknown as (q?: Record<string, unknown>) => Node[],
-  type: getTypeAliases as unknown as (q?: Record<string, unknown>) => Node[],
   variable: getVariables as unknown as (q?: Record<string, unknown>) => Node[],
   import: getImports as unknown as (q?: Record<string, unknown>) => Node[],
   export: getExports as unknown as (q?: Record<string, unknown>) => Node[],
