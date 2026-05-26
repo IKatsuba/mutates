@@ -55,6 +55,16 @@ export default defineCommand({
             await conn.call('session.close', { sessionId: s.id });
             closed.push(s.id);
           }
+          // `--all` is the user saying "I'm done with this daemon" — shut it
+          // down so the lockfile and socket clean up immediately, instead
+          // of leaving the daemon hanging until its idle timer fires.
+          try {
+            await conn.call('daemon.shutdown', {});
+          } catch {
+            // Older daemons (or a daemon that races us closing first) may
+            // not handle daemon.shutdown. Either way the close above has
+            // already removed every session — non-fatal.
+          }
         } else if (args.session) {
           await conn.call('session.close', { sessionId: args.session });
           closed.push(args.session);

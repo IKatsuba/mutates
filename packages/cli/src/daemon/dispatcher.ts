@@ -32,6 +32,12 @@ export type Handler = (
 export interface DispatcherOptions {
   manager: SessionManager;
   handlers?: Record<string, Handler>;
+  /**
+   * Called when a client invokes `daemon.shutdown`. The daemon entry
+   * wires this to its `shutdown()` handle so the process exits cleanly
+   * after the response is flushed.
+   */
+  onShutdownRequest?: () => void;
 }
 
 /**
@@ -44,9 +50,11 @@ export interface DispatcherOptions {
 export class Dispatcher {
   private readonly handlers = new Map<string, Handler>();
   private readonly manager: SessionManager;
+  private readonly onShutdownRequest: (() => void) | null;
 
   constructor(opts: DispatcherOptions) {
     this.manager = opts.manager;
+    this.onShutdownRequest = opts.onShutdownRequest ?? null;
     this.register('session.open', sessionOpenHandler);
     this.register('session.close', sessionCloseHandler);
     this.register('session.list', sessionListHandler);
@@ -57,6 +65,14 @@ export class Dispatcher {
     this.register('save', saveHandler);
     this.register('reload', reloadHandler);
     this.register('op', opHandler);
+    this.register('daemon.shutdown', () => {
+      // Defer until after this response is written so the client sees a
+      // confirmation before the socket closes.
+      if (this.onShutdownRequest) {
+        setImmediate(() => this.onShutdownRequest?.());
+      }
+      return { ok: true };
+    });
     for (const [name, handler] of Object.entries(opts.handlers ?? {})) {
       this.register(name, handler);
     }

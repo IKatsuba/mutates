@@ -201,9 +201,6 @@ import {
   getInterfaces,
   getMethods,
   getNamedImports,
-  getObjectAccessors,
-  getObjectMethods,
-  getObjectProperties,
   getParams,
   getSourceFile,
   getSourceFiles,
@@ -211,29 +208,43 @@ import {
   matchQuery,
 } from '@mutates/core';
 
+/**
+ * Top-level finders accept \`{ pattern }\` directly because the result
+ * lives in the source file (classes, functions, etc.). Categories that
+ * live *inside* another declaration (methods inside classes, params
+ * inside functions, ...) need a two-step descent — see
+ * \`COMPOSITE_RESOLVERS\` below.
+ */
 const FINDERS: Record<string, ((q?: Record<string, unknown>) => Node[]) | undefined> = {
-  accessors: getAccessors as never,
   'all-decorators': getAllDecorators as never,
-  'class-accessors': getClassAccessors as never,
-  'class-methods': getClassMethods as never,
-  'class-properties': getClassProperties as never,
   classes: getClasses as never,
-  constructors: getConstructors as never,
-  decorators: getDecorators as never,
   enums: getEnums as never,
   exports: getExports as never,
   functions: getFunctions as never,
   imports: getImports as never,
   interfaces: getInterfaces as never,
-  methods: getMethods as never,
-  'named-imports': getNamedImports as never,
-  'object-accessors': getObjectAccessors as never,
-  'object-methods': getObjectMethods as never,
-  'object-properties': getObjectProperties as never,
-  params: getParams as never,
   'source-file': getSourceFile as never,
   'source-files': getSourceFiles as never,
   variables: getVariables as never,
+};
+
+/**
+ * Categories that need an enclosing scope before they can be enumerated.
+ * Each resolver receives the file glob plus the optional filter and
+ * returns the matched declarations. Without this, calling e.g.
+ * \`getMethods({ pattern })\` blows up because \`getMethods\` expects
+ * already-located class declarations, not a glob.
+ */
+const COMPOSITE_RESOLVERS: Record<string, (pattern: string) => Node[]> = {
+  methods: (pattern) => getMethods(getClasses({ pattern }) as never),
+  accessors: (pattern) => getAccessors(getClasses({ pattern }) as never),
+  'class-accessors': (pattern) => getClassAccessors(getClasses({ pattern })),
+  'class-methods': (pattern) => getClassMethods(getClasses({ pattern })),
+  'class-properties': (pattern) => getClassProperties(getClasses({ pattern })),
+  constructors: (pattern) => getConstructors(getClasses({ pattern })),
+  decorators: (pattern) => getDecorators(getClasses({ pattern })),
+  params: (pattern) => getParams(getFunctions({ pattern })),
+  'named-imports': (pattern) => getNamedImports(getImports({ pattern })),
 };
 
 /**
@@ -251,15 +262,14 @@ export function resolveDeclarations(
     return [node];
   }
   if (target?.file) {
-    const finder = FINDERS[category];
-    if (!finder) {
+    const nodes = resolveByPattern(category, target.file);
+    if (nodes === null) {
       throw new RpcError(
         ErrorCode.InvalidInput,
         \`no finder registered for category "\${category}" — pass --ref instead\`,
         { category },
       );
     }
-    const nodes = finder({ pattern: target.file });
     if (!target.filter) return nodes;
     return nodes.filter((n) =>
       matchQuery(
@@ -273,6 +283,15 @@ export function resolveDeclarations(
     'target requires either ref or file (with optional filter)',
   );
 }
+
+function resolveByPattern(category: string, pattern: string): Node[] | null {
+  const composite = COMPOSITE_RESOLVERS[category];
+  if (composite) return composite(pattern);
+  const finder = FINDERS[category];
+  if (!finder) return null;
+  return finder({ pattern });
+}
+
 
 /**
  * Mint refs for every node returned by a \`get*\` op.

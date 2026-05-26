@@ -265,7 +265,7 @@ describe('mutates bin (E2E with in-process daemon)', () => {
     rmSync(projectRoot, { recursive: true, force: true });
   });
 
-  it('open → sessions list → close --all', async () => {
+  it('open → sessions list → close --all (shuts down the daemon)', async () => {
     const { daemon } = await startDaemonAndConnect(projectRoot);
     try {
       // mutates open --root <tmp> --json
@@ -289,6 +289,12 @@ describe('mutates bin (E2E with in-process daemon)', () => {
       expect(listResult.some((s) => s.id === openResult.sessionId)).toBe(true);
 
       // mutates close --all --root <tmp> --json
+      // `close --all` closes every session AND asks the daemon to shut
+      // itself down so the lockfile + socket clean up immediately
+      // (rather than waiting for idle-timeout). The in-process daemon's
+      // `exitOnShutdownRequest` is false (test default), so the daemon
+      // closes its server + drops the lockfile without killing the test
+      // runner.
       const closeRun = await capture(() =>
         runCommand(main, {
           rawArgs: ['close', '--all', '--root', projectRoot, '--json'],
@@ -297,17 +303,13 @@ describe('mutates bin (E2E with in-process daemon)', () => {
       const closeResult = JSON.parse(closeRun.stdout.trim()) as { closed: string[] };
       expect(closeResult.closed).toContain(openResult.sessionId);
 
-      // After close --all, the in-process daemon still owns the lockfile
-      // (until shutdown). Confirm the session list is empty.
-      const listAfter = await capture(() =>
-        runCommand(main, {
-          rawArgs: ['sessions', 'list', '--root', projectRoot, '--json'],
-        }),
-      );
-      expect(JSON.parse(listAfter.stdout.trim())).toEqual([]);
+      // Allow the dispatcher's setImmediate-scheduled shutdown to land.
+      await new Promise<void>((res) => setTimeout(res, 50));
+
+      // Lockfile must be removed once close --all has propagated.
+      expect(readLockfile(projectRoot)).toBeNull();
     } finally {
       await daemon.shutdown();
-      // After daemon shutdown the lockfile must be gone.
       expect(readLockfile(projectRoot)).toBeNull();
     }
   });

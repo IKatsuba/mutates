@@ -25,10 +25,11 @@ export const main = defineCommand({
     skills: () => import('../src/commands/core/skills').then((m) => m.default),
     ...GENERATED_COMMANDS,
   },
-  run() {
-    // eslint-disable-next-line no-console
-    console.log('Run `mutates --help` to see available commands.');
-  },
+  // Citty (v0.1.x) runs a parent `run()` even after a subcommand handled
+  // the call, so anything printed here leaks into stdout on every
+  // invocation. We rely on `--help` interception in `runMain` and on
+  // citty throwing `E_NO_COMMAND` (which prints usage) when called with
+  // no args, so no parent run is needed.
 });
 
 if (require.main === module) {

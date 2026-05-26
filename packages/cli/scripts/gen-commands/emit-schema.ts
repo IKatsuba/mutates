@@ -96,16 +96,62 @@ function dataSchema(c: Classified): Record<string, unknown> {
   if (c.targetShape === 'query' || c.targetShape === 'no-params') {
     return { description: 'Not used for this op (target carries the query)' };
   }
+  // Per-op data is forwarded straight to ts-morph's structure builders, which
+  // will silently coerce nonsense (`name: 42`) into a class without a name.
+  // We enumerate the well-known scalar properties so AJV catches the obvious
+  // shape errors before ts-morph ever runs.
+  const objectSchema = {
+    type: 'object',
+    properties: COMMON_STRUCTURE_PROPS,
+    additionalProperties: true,
+  };
   // `add*` may take a single structure or an array; the others always take a
   // single object override. We use `oneOf` so callers may pass either shape
   // and the core function `coerceArray`s it server-side.
   if (c.verb === 'add') {
     return {
-      oneOf: [
-        { type: 'object', additionalProperties: true },
-        { type: 'array', items: { type: 'object', additionalProperties: true } },
-      ],
+      oneOf: [objectSchema, { type: 'array', items: objectSchema }],
     };
   }
-  return { type: 'object', additionalProperties: true };
+  return objectSchema;
 }
+
+/**
+ * Common scalar properties used across ts-morph `*Structure` types.
+ * The keys not listed here remain unvalidated (`additionalProperties:
+ * true`), but for these ones AJV will reject the wrong primitive type
+ * before the structure ever reaches ts-morph.
+ */
+const COMMON_STRUCTURE_PROPS: Record<string, unknown> = {
+  name: { type: 'string' },
+  text: { type: 'string' },
+  type: { type: 'string' },
+  returnType: { type: 'string' },
+  initializer: { type: 'string' },
+  moduleSpecifier: { type: 'string' },
+  namespaceImport: { type: 'string' },
+  defaultImport: { type: 'string' },
+  isExported: { type: 'boolean' },
+  isDefaultExport: { type: 'boolean' },
+  isAbstract: { type: 'boolean' },
+  isAsync: { type: 'boolean' },
+  isGenerator: { type: 'boolean' },
+  isStatic: { type: 'boolean' },
+  isReadonly: { type: 'boolean' },
+  isOptional: { type: 'boolean' },
+  hasQuestionToken: { type: 'boolean' },
+  hasExclamationToken: { type: 'boolean' },
+  hasOverrideKeyword: { type: 'boolean' },
+  hasDeclareKeyword: { type: 'boolean' },
+  isExportEquals: { type: 'boolean' },
+  isTypeOnly: { type: 'boolean' },
+  declarationKind: { type: 'string' },
+  scope: { type: 'string' },
+  kind: { type: ['string', 'number'] },
+  extends: {
+    oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+  },
+  implements: {
+    oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+  },
+};

@@ -3,6 +3,7 @@ import { defineCommand } from 'citty';
 
 import { formatSnapshot } from '../../client/format-snapshot';
 import { exitCodeFor, renderError, renderResult } from '../../client/output';
+import { resolveSessionId } from '../../client/resolve-session';
 import { connectClient } from '../../client/rpc-client';
 import { RpcError } from '../../proto/jsonrpc';
 import type { SnapshotResult } from '../../session/snapshot';
@@ -50,7 +51,7 @@ export default defineCommand({
         const target = args.target.startsWith('@n')
           ? { ref: args.target }
           : { file: resolve(args.target) };
-        const sessionId = args.session ?? (await openSession(conn, root));
+        const sessionId = await resolveSessionId(conn, root, args.session);
         const result = await conn.call<SnapshotResult>('snapshot', { sessionId, target });
         if (args.json) renderResult(result, 'json');
         else process.stdout.write(formatSnapshot(result));
@@ -63,11 +64,3 @@ export default defineCommand({
     }
   },
 });
-
-async function openSession(
-  conn: { call: <R>(method: string, params?: unknown) => Promise<R> },
-  root: string,
-): Promise<string> {
-  const opened = await conn.call<{ sessionId: string }>('session.open', { root });
-  return opened.sessionId;
-}

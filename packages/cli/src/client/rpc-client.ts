@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, unlinkSync } from 'node:fs';
 import { connect, type Socket } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, resolve as resolvePath } from 'node:path';
@@ -90,9 +90,27 @@ export async function connectClient(opts: ConnectOptions): Promise<Connection> {
   let lock: SessionLockfile | null = readLockfile(absRoot);
 
   if (!lock) {
-    // Clear any stale entry left by a crashed daemon.
+    // If the caller is pinning to a specific session id and no daemon
+    // is alive for this root, the session cannot possibly exist — fail
+    // fast instead of spawning a fresh daemon just to validate a id
+    // that we already know is dead.
+    if (opts.sessionId) {
+      throw new RpcError(ErrorCode.SessionNotFound, `session not found: ${opts.sessionId}`, {
+        sessionId: opts.sessionId,
+      });
+    }
+    // Clear any stale entry left by a crashed daemon. We unlink both the
+    // lockfile JSON and the Unix socket file — otherwise the fresh
+    // daemon fails to bind with EADDRINUSE on the old socket path.
     unlinkLockfile(absRoot);
     const sock = deriveSocketPath(absRoot);
+    if (process.platform !== 'win32') {
+      try {
+        unlinkSync(sock);
+      } catch (err) {
+        if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
+      }
+    }
     spawnDaemon(absRoot, sock, opts);
     lock = await waitForLockfile(absRoot);
   }
