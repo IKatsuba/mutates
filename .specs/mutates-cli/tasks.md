@@ -162,7 +162,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Unit tests `snapshot.spec.ts`: tiny project with a class, function, import; assert text + JSON shape; drill into the class returns its methods/properties; refs are sequential per file.
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 4.1_
 
-- [ ] 15. Daemon handlers: `snapshot`, `find`, `listFiles`
+- [x] 15. Daemon handlers: `snapshot`, `find`, `listFiles`
   - Create `packages/cli/src/daemon/handlers/snapshot.ts`, `find.ts`, `list-files.ts`. Each looks up the session by id, calls the relevant `session/*` module, and returns the result. `find` translates `(kind, query)` to a `get*` from `@mutates/core` (use `getClasses`/`getFunctions`/etc., gated by `kind`), then mints fresh refs via the RefTable.
   - Register the handlers in `dispatcher.ts`.
   - Integration tests `daemon/handlers/snapshot.spec.ts`: in-process daemon, in-memory project, drive via RpcClient. Verify shape and StaleRef invalidation after a mutation simulated by a direct call to `session.refs.invalidateFile`.
