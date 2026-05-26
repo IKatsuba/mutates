@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@mutates/core": "0.0.0-development",
+    "ajv": "^8.17.1",
     "citty": "^0.1.6",
     "diff": "^4.0.2",
     "tslib": "^2.3.0",

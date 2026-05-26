@@ -103,7 +103,7 @@ describe('daemon dispatcher (in-process)', () => {
   it('returns MethodNotFound for unregistered methods', async () => {
     const client = await makeClient(sockPath);
     try {
-      const resp = await client.call({ id: 9, method: 'op', params: {} });
+      const resp = await client.call({ id: 9, method: 'no-such-method', params: {} });
       expect('error' in resp).toBe(true);
       expect((resp as { error: { code: number } }).error.code).toBe(ErrorCode.MethodNotFound);
     } finally {

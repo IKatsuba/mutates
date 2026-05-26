@@ -9,6 +9,7 @@ import {
 import { diffHandler } from './handlers/diff';
 import { findHandler } from './handlers/find';
 import { listFilesHandler } from './handlers/list-files';
+import { opHandler } from './handlers/op';
 import { reloadHandler } from './handlers/reload';
 import { saveHandler } from './handlers/save';
 import { snapshotHandler } from './handlers/snapshot';
@@ -55,6 +56,7 @@ export class Dispatcher {
     this.register('diff', diffHandler);
     this.register('save', saveHandler);
     this.register('reload', reloadHandler);
+    this.register('op', opHandler);
     for (const [name, handler] of Object.entries(opts.handlers ?? {})) {
       this.register(name, handler);
     }

@@ -213,7 +213,7 @@ commands work.
   - Add a CI guard: a second target `gen-commands:check` that runs the emitter to a temp dir and `diff`s against the committed-as-generated state — fails CI if regen drifts from what was last produced. (Tracking only stable parts; since the files are gitignored we instead snapshot the file *count and names* in a tracked summary `packages/cli/src/generated/.manifest.json`.)
   - _Requirements: 5.1, 5.2, 5.6_
 
-- [ ] 21. Wire `op` into the dispatcher
+- [x] 21. Wire `op` into the dispatcher
   - Create `packages/cli/src/daemon/handlers/op.ts`: looks up the handler in a generated index (`src/daemon/handlers/generated/index.ts`, also emitted by the driver), calls `session.withActiveProject(() => handler(session, params))`, asserts mutations via `invalidateFile`, returns `{ ok: true, mutated: session.dirtyFiles() }`.
   - Register `op` in `dispatcher.ts`. Validate `params.data` against the JSON Schema from `op-schemas.ts` before dispatch; on fail, return `InvalidInput`.
   - Integration test `daemon/handlers/op.spec.ts`: call `op` with `addClasses` against an InMemoryFileSystemHost project, assert source file content includes the new class, assert refs for that file are invalidated.
