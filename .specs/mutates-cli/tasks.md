@@ -41,7 +41,7 @@ A new empty package wired into Nx, plus one new named export on
 artefact; existing core behaviour is unchanged because all current
 callers go through `createProject` / `resetActiveProject`.
 
-- [ ] 1. Create the `@mutates/cli` package skeleton
+- [x] 1. Create the `@mutates/cli` package skeleton
   - Create `packages/cli/package.json` mirroring `packages/core/package.json` (type=commonjs, publishConfig.access=public, repository, license). `name: "@mutates/cli"`, `bin: { mutates: "./bin/mutates.js" }`. Dependencies: `citty`, `@mutates/core` (workspace), `xxhash-wasm`, `tslib`.
   - Create `packages/cli/project.json` with two `@nx/js:tsc` targets: `build` (main=`packages/cli/src/index.ts`, additionalEntryPoints=`["packages/cli/bin/mutates.ts","packages/cli/src/daemon/entry.ts"]`, outputPath=`dist/packages/cli`) and `test` (vitest, reportsDirectory=`../../coverage/packages/cli`).
   - Create `packages/cli/tsconfig.json`, `tsconfig.lib.json`, `tsconfig.spec.json` mirroring core's layout. **Override `target: "es2022"` and `lib: ["es2022"]`** in `tsconfig.lib.json` because RefTable uses `WeakRef` (ES2021+) and `FinalizationRegistry`.
