@@ -54,7 +54,7 @@ callers go through `createProject` / `resetActiveProject`.
   - **Why safe**: new workspace member; no existing target depends on it.
   - _Requirements: 1.1, 1.2_
 
-- [ ] 2. Add `setActiveProject` named export to `@mutates/core`
+- [x] 2. Add `setActiveProject` named export to `@mutates/core`
   - In `packages/core/src/lib/project/project.ts:7`, change the existing internal `function setActiveProject` to be exported (`export function setActiveProject(project: Project | null): Project | null`). Update its signature to accept either a real `Project` or `null` (currently it accepts the same — verify it does).
   - Confirm `packages/core/src/index.ts` re-exports everything from `./lib/project` (it does via `export * from './lib/project'`), so the new export is reachable through `@mutates/core`.
   - Add a unit test `packages/core/src/lib/project/project.spec.ts` that swaps in two distinct projects via `setActiveProject`, asserts `getActiveProject()` returns the right one, and restores the previous via the function's return value.
