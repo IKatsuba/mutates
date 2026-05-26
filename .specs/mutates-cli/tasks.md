@@ -84,7 +84,7 @@ exercise the new export from Group A but cannot observe any
 mutation. The daemon dispatcher rejects every other method with
 `MethodNotFound`.
 
-- [ ] 5. JSON-RPC framing + error codes
+- [x] 5. JSON-RPC framing + error codes
   - Create `packages/cli/src/proto/error-codes.ts` with the `ErrorCode` const map from `design.md` (numeric ↔ symbolic), plus a `toSymbolic(code: number): string` helper for the CLI surface mapping.
   - Create `packages/cli/src/proto/jsonrpc.ts` with: `RpcRequest`, `RpcResponse`, `RpcError` types; an `NdjsonCodec` class with `encode(msg)` / a `Transform`-stream `decode()` that emits one JSON object per `\n`-terminated line, handling partial chunks; an `RpcError` class extending `Error` carrying `code`, `data`.
   - Unit tests `proto/jsonrpc.spec.ts`: round-trips, partial-chunk reassembly across `data` events, malformed lines reject with `ParseError`.
