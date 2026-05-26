@@ -69,6 +69,45 @@ describe('mutates bin', () => {
   });
 });
 
+describe('mutates skills', () => {
+  it('skills list returns at least the core entry as JSON', async () => {
+    const run = await capture(() => runCommand(main, { rawArgs: ['skills', 'list'] }));
+    const parsed = JSON.parse(run.stdout.trim()) as Array<{
+      name: string;
+      description: string;
+      sizeBytes: number;
+    }>;
+    expect(Array.isArray(parsed)).toBe(true);
+    const core = parsed.find((e) => e.name === 'core');
+    expect(core).toBeDefined();
+    expect(core!.sizeBytes).toBeGreaterThan(0);
+    expect(core!.description.length).toBeGreaterThan(0);
+  });
+
+  it('skills get core prints the core.md markdown verbatim', async () => {
+    const run = await capture(() => runCommand(main, { rawArgs: ['skills', 'get', 'core'] }));
+    expect(run.stderr).toBe('');
+    expect(run.stdout).toContain('# mutates core');
+    expect(run.stdout.length).toBeGreaterThan(0);
+  });
+
+  it('skills get on an unknown name exits with NOT_FOUND', async () => {
+    const prevExitCode = process.exitCode;
+    process.exitCode = undefined;
+    try {
+      const run = await capture(() =>
+        runCommand(main, { rawArgs: ['skills', 'get', 'nope-not-real'] }),
+      );
+      expect(run.stdout).toBe('');
+      const err = JSON.parse(run.stderr.trim()) as { code: string };
+      expect(err.code).toBe('NOT_FOUND');
+      expect(process.exitCode).toBe(3);
+    } finally {
+      process.exitCode = prevExitCode;
+    }
+  });
+});
+
 describe('mutates bin (generated op E2E)', () => {
   let runtimeDir: string;
   let projectRoot: string;

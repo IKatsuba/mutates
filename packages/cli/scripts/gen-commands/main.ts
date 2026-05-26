@@ -44,9 +44,13 @@ export function run(opts: RunOptions = {}): {
   const generatedDir = join(outRoot, 'src/generated');
 
   // Wipe previous run so the manifest is exact.
+  // Note: only remove this generator's own files inside `src/generated/`
+  // — sibling codegens (e.g. `gen-skills`) write there too and we must
+  // not clobber their output regardless of target execution order.
   rmSync(handlersDir, { recursive: true, force: true });
   rmSync(commandsDir, { recursive: true, force: true });
-  rmSync(generatedDir, { recursive: true, force: true });
+  rmSync(join(generatedDir, 'op-schemas.ts'), { force: true });
+  rmSync(join(generatedDir, '.manifest.json'), { force: true });
 
   ensureDir(handlersDir);
   ensureDir(commandsDir);
