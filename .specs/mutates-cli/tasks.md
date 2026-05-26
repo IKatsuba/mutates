@@ -273,7 +273,7 @@ core` receives the same content baked into the installed version.
 Final integration tests and the bits that are easier to land after the
 whole stack exists.
 
-- [ ] 29. Idle-timeout integration test
+- [x] 29. Idle-timeout integration test
   - `packages/cli/src/daemon/idle-timeout.spec.ts`: spawn real daemon with `MUTATES_IDLE_TIMEOUT=200`, run `mutates sessions list`, wait 500ms, confirm the daemon process exited (via `process.kill(pid,0)` → ESRCH), confirm lockfile is unlinked.
   - _Requirements: 2.4_
 
