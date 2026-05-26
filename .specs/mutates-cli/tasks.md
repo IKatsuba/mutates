@@ -282,7 +282,7 @@ whole stack exists.
   - Add the `--all` flag to `sessions list` if not already present (read from the lockfile dir).
   - _Requirements: 10.1, 10.2_
 
-- [ ] 31. Output contract conformance test
+- [x] 31. Output contract conformance test
   - `packages/cli/src/client/output.spec.ts`: parameterized over every error code in `ErrorCode`; force each error path by sending a crafted RPC, assert the stderr payload is valid JSON with `{ code, message, details }` and the exit code is non-zero per the design table.
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
