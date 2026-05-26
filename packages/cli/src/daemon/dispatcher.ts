@@ -128,8 +128,7 @@ const sessionListHandler: Handler = ({ manager }) => {
     id: s.id,
     root: s.root,
     ageMs: Date.now() - s.openedAt,
-    // Real dirty count lands in Group C; placeholder of 0 is correct for the holder shape.
-    unsavedFiles: 0,
+    unsavedFiles: s.dirtyFiles().length,
   }));
 };
 

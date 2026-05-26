@@ -1,22 +1,8 @@
-import { randomUUID } from 'node:crypto';
-import { existsSync } from 'node:fs';
-import { join, resolve as resolvePath } from 'node:path';
+import { Session } from '../session/session';
 
 export const DEFAULT_IDLE_TIMEOUT_MS = 600_000;
 
-/**
- * Placeholder Session — the real ts-morph–backed `Session` class lands in
- * Group C. At this stage we only model the metadata the dispatcher needs
- * for `session.open` / `session.list` / `session.close` to behave
- * correctly end-to-end.
- */
-export interface Session {
-  readonly id: string;
-  readonly root: string;
-  readonly openedAt: number;
-  /** Absolute path to the project's tsconfig.json, or null if none. */
-  readonly tsconfig: string | null;
-}
+export { Session };
 
 export interface SessionManagerOptions {
   /**
@@ -50,14 +36,7 @@ export class SessionManager {
   }
 
   open(root: string): Session {
-    const abs = resolvePath(root);
-    const candidate = join(abs, 'tsconfig.json');
-    const session: Session = {
-      id: randomUUID(),
-      root: abs,
-      openedAt: Date.now(),
-      tsconfig: existsSync(candidate) ? candidate : null,
-    };
+    const session = new Session({ root });
     this.sessions.set(session.id, session);
     this.touch();
     return session;
