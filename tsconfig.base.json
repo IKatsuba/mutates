@@ -16,6 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@mutates/angular": ["packages/angular/src/index.ts"],
+      "@mutates/cli": ["packages/cli/src/index.ts"],
+      "@mutates/cli/testing": ["packages/cli/src/testing.ts"],
       "@mutates/core": ["packages/core/src/index.ts"],
       "@mutates/core/testing": ["packages/core/src/testing.ts"],
       "@mutates/nx": ["packages/nx/src/index.ts"]

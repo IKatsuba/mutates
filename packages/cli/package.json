@@ -1,0 +1,36 @@
+{
+  "name": "@mutates/cli",
+  "version": "0.0.0-development",
+  "keywords": [
+    "ast",
+    "cli",
+    "typescript",
+    "mutations"
+  ],
+  "homepage": "https://github.com/IKatsuba/mutates",
+  "repository": "https://github.com/IKatsuba/mutates",
+  "license": "Apache-2.0",
+  "contributors": [
+    "Igor Katsuba <igor@katsuba.dev>"
+  ],
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "bin": {
+    "mutates": "./bin/mutates.js"
+  },
+  "dependencies": {
+    "@mutates/core": "0.0.0-development",
+    "ajv": "^8.17.1",
+    "citty": "^0.1.6",
+    "diff": "^4.0.2",
+    "tslib": "^2.3.0",
+    "xxhash-wasm": "^1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "authors": [
+    "Igor Katsuba <igor@katsuba.dev>"
+  ]
+}

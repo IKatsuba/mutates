@@ -1,0 +1,68 @@
+{
+  "name": "cli",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/cli/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["gen-commands", "gen-skills"],
+      "options": {
+        "outputPath": "dist/packages/cli",
+        "main": "packages/cli/src/index.ts",
+        "additionalEntryPoints": [
+          "packages/cli/bin/mutates.ts",
+          "packages/cli/src/daemon/entry.ts"
+        ],
+        "generateExportsField": true,
+        "tsConfig": "packages/cli/tsconfig.lib.json",
+        "assets": ["packages/cli/*.md"]
+      }
+    },
+    "gen-commands": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-commands/main.ts",
+        "cwd": "packages/cli"
+      },
+      "outputs": [
+        "{projectRoot}/src/daemon/handlers/generated",
+        "{projectRoot}/src/commands/generated",
+        "{projectRoot}/src/generated"
+      ]
+    },
+    "gen-commands:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-commands/main.ts --check",
+        "cwd": "packages/cli"
+      }
+    },
+    "gen-skills": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-skills.ts",
+        "cwd": "packages/cli"
+      },
+      "outputs": ["{projectRoot}/src/generated/skills.ts"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "dependsOn": ["gen-commands", "gen-skills"],
+      "options": {
+        "reportsDirectory": "../../coverage/packages/cli"
+      }
+    }
+  }
+}

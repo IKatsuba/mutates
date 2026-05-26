@@ -4,7 +4,7 @@ import { Pattern } from '../utils';
 
 let prevProject: Project | null = null;
 
-function setActiveProject(project: Project | null): Project | null {
+export function setActiveProject(project: Project | null): Project | null {
   const prev = prevProject;
 
   prevProject = project;
