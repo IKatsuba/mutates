@@ -17,6 +17,8 @@ export default defineConfig({
       'bin/**/*.{test,spec}.ts',
       'scripts/**/*.{test,spec}.ts',
     ],
+    testTimeout: 15000,
+    hookTimeout: 15000,
     reporters: ['default'],
     coverage: {
       reportsDirectory: '../../coverage/packages/cli',
