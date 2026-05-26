@@ -110,7 +110,7 @@ mutation. The daemon dispatcher rejects every other method with
   - Integration tests `client/rpc-client.spec.ts`: spawn the real daemon binary against a tmpdir, exercise `session.open` / `list` / `close`. Tolerance: skip on CI runners without `XDG_RUNTIME_DIR` by falling back to `os.tmpdir()`.
   - _Requirements: 1.3, 2.1, 2.5, 2.7, 10.2_
 
-- [ ] 9. Hand-written commands `open`, `close`, `sessions`
+- [x] 9. Hand-written commands `open`, `close`, `sessions`
   - `src/commands/core/open.ts`: args `{ root?: string }`, calls `rpc.call('session.open', { root: resolve(args.root ?? process.cwd()) })`, prints `{ sessionId, tsconfig, idleTimeoutMs }`.
   - `src/commands/core/close.ts`: args `{ session?: string, all?: boolean }`, calls `session.close` or iterates `session.list` then closes each when `--all`.
   - `src/commands/core/sessions.ts` with subcommand `list` returning the list.
