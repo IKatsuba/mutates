@@ -176,7 +176,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Integration tests covering: dry-run does not touch disk; save writes and refreshes fingerprints; concurrent on-disk touch causes StaleFile; reload re-reads.
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 7.2, 7.4_
 
-- [ ] 17. Hand-written commands: `snapshot`, `find`, `diff`, `save`, `reload`, `list-files`
+- [x] 17. Hand-written commands: `snapshot`, `find`, `diff`, `save`, `reload`, `list-files`
   - `src/commands/core/snapshot.ts` with args `{ target: positional, json?: boolean }` — `target` is either a path or `@nN`. Renders via `client/format-snapshot.ts` unless `--json`.
   - `src/commands/core/save.ts` with `{ file?, dryRun?: boolean, session? }`.
   - `src/commands/core/diff.ts`, `find.ts`, `reload.ts`, `list-files.ts` analogously.

@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { renderUsage, runCommand } from 'citty';
@@ -48,6 +48,79 @@ describe('mutates bin', () => {
     expect(usage).toContain('open');
     expect(usage).toContain('close');
     expect(usage).toContain('sessions');
+  });
+
+  it('lists the read/save commands in --help', async () => {
+    const usage = await renderUsage(main);
+    expect(usage).toContain('snapshot');
+    expect(usage).toContain('find');
+    expect(usage).toContain('diff');
+    expect(usage).toContain('save');
+    expect(usage).toContain('reload');
+    expect(usage).toContain('list-files');
+  });
+});
+
+describe('mutates bin (read-only E2E)', () => {
+  let runtimeDir: string;
+  let projectRoot: string;
+
+  beforeEach(() => {
+    runtimeDir = mkdtempSync(join(tmpdir(), 'mutates-runtime-'));
+    process.env['MUTATES_RUNTIME_DIR'] = runtimeDir;
+    projectRoot = mkdtempSync(join(tmpdir(), 'mutates-root-'));
+    mkdirSync(join(projectRoot, 'src'));
+    writeFileSync(
+      join(projectRoot, 'src/app.ts'),
+      `export class AppService {}\nexport function helper() {}\n`,
+    );
+  });
+
+  afterEach(() => {
+    unlinkLockfile(projectRoot);
+    delete process.env['MUTATES_RUNTIME_DIR'];
+    rmSync(runtimeDir, { recursive: true, force: true });
+    rmSync(projectRoot, { recursive: true, force: true });
+  });
+
+  it('open → snapshot → diff (empty) flow', async () => {
+    const { daemon } = await startDaemonAndConnect(projectRoot);
+    try {
+      const openRun = await capture(() =>
+        runCommand(main, { rawArgs: ['open', '--root', projectRoot, '--json'] }),
+      );
+      const openResult = JSON.parse(openRun.stdout.trim()) as { sessionId: string };
+      expect(typeof openResult.sessionId).toBe('string');
+
+      const snap = await capture(() =>
+        runCommand(main, {
+          rawArgs: [
+            'snapshot',
+            join(projectRoot, 'src/app.ts'),
+            '--root',
+            projectRoot,
+            '--session',
+            openResult.sessionId,
+            '--json',
+          ],
+        }),
+      );
+      const snapResult = JSON.parse(snap.stdout.trim()) as {
+        entries: Array<{ kind: string }>;
+      };
+      expect(snapResult.entries.map((e) => e.kind)).toContain('class');
+      expect(snapResult.entries.map((e) => e.kind)).toContain('function');
+
+      const diff = await capture(() =>
+        runCommand(main, {
+          rawArgs: ['diff', '--root', projectRoot, '--session', openResult.sessionId, '--json'],
+        }),
+      );
+      const diffResult = JSON.parse(diff.stdout.trim()) as Array<{ unified: string }>;
+      expect(diffResult.every((d) => d.unified === '')).toBe(true);
+    } finally {
+      await daemon.shutdown();
+    }
   });
 });
 
