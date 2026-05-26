@@ -277,7 +277,7 @@ whole stack exists.
   - `packages/cli/src/daemon/idle-timeout.spec.ts`: spawn real daemon with `MUTATES_IDLE_TIMEOUT=200`, run `mutates sessions list`, wait 500ms, confirm the daemon process exited (via `process.kill(pid,0)` → ESRCH), confirm lockfile is unlinked.
   - _Requirements: 2.4_
 
-- [ ] 30. Multi-session integration test
+- [x] 30. Multi-session integration test
   - `packages/cli/src/client/multi-session.spec.ts`: open two daemons against two different tmpdir roots, run `mutates sessions list` from each `cwd`, assert each invocation only sees its own daemon, but `mutates sessions list --all` (or unscoped via env override) sees both via the lockfile directory.
   - Add the `--all` flag to `sessions list` if not already present (read from the lockfile dir).
   - _Requirements: 10.1, 10.2_

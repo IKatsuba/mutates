@@ -1,5 +1,13 @@
 import { createHash } from 'node:crypto';
-import { closeSync, mkdirSync, openSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import {
+  closeSync,
+  mkdirSync,
+  openSync,
+  readdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
@@ -112,6 +120,44 @@ export function read(root: string): SessionLockfile | null {
   if (!isSessionLockfile(parsed)) return null;
   if (!isAlive(parsed.pid)) return null;
   return parsed;
+}
+
+/**
+ * Enumerate every live lockfile across the runtime dir. Used by
+ * `mutates sessions list --all` to surface every daemon irrespective of
+ * the caller's `--root`. Stale or malformed entries are dropped
+ * silently (mirroring {@link read}); we never delete here so two
+ * concurrent listers do not race each other into removing valid files.
+ */
+export function listAll(): SessionLockfile[] {
+  const dir = lockfileDir();
+  let names: string[];
+  try {
+    names = readdirSync(dir);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return [];
+    throw err;
+  }
+  const out: SessionLockfile[] = [];
+  for (const name of names) {
+    if (!name.endsWith('.json')) continue;
+    let raw: string;
+    try {
+      raw = readFileSync(join(dir, name), 'utf8');
+    } catch {
+      continue;
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      continue;
+    }
+    if (!isSessionLockfile(parsed)) continue;
+    if (!isAlive(parsed.pid)) continue;
+    out.push(parsed);
+  }
+  return out;
 }
 
 /** Remove the lockfile for `root`. Silent on ENOENT. */
