@@ -6,8 +6,11 @@ import {
   type RpcRequest,
   type RpcResponse,
 } from '../proto/jsonrpc';
+import { diffHandler } from './handlers/diff';
 import { findHandler } from './handlers/find';
 import { listFilesHandler } from './handlers/list-files';
+import { reloadHandler } from './handlers/reload';
+import { saveHandler } from './handlers/save';
 import { snapshotHandler } from './handlers/snapshot';
 import type { Session, SessionManager } from './session-manager';
 
@@ -49,6 +52,9 @@ export class Dispatcher {
     this.register('snapshot', snapshotHandler);
     this.register('find', findHandler);
     this.register('listFiles', listFilesHandler);
+    this.register('diff', diffHandler);
+    this.register('save', saveHandler);
+    this.register('reload', reloadHandler);
     for (const [name, handler] of Object.entries(opts.handlers ?? {})) {
       this.register(name, handler);
     }

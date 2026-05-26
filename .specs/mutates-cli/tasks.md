@@ -168,7 +168,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Integration tests `daemon/handlers/snapshot.spec.ts`: in-process daemon, in-memory project, drive via RpcClient. Verify shape and StaleRef invalidation after a mutation simulated by a direct call to `session.refs.invalidateFile`.
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.5_
 
-- [ ] 16. Daemon handlers: `diff`, `save`, `reload`
+- [x] 16. Daemon handlers: `diff`, `save`, `reload`
   - `packages/cli/src/daemon/handlers/diff.ts`: returns unified diffs between `session.project.getSourceFile(file).getFullText()` and the on-disk content. Use a tiny inline diff utility (e.g. `diff` package, ~1KB) to avoid hand-rolling unified format. Add `diff` to package.json.
   - `packages/cli/src/daemon/handlers/save.ts`: for each dirty file: `await session.stats.verify(file, project.getSourceFile(file).getFullText())`; if any returns `StaleFile`, throw `RpcError(StaleFile)` with the offending file names — write nothing. If all ok and `dryRun` is true, return `wouldWrite` list; else `await sourceFile.save()`, then `session.stats.record(file, fresh fp)`. Return written paths.
   - `packages/cli/src/daemon/handlers/reload.ts`: calls `sourceFile.refreshFromFileSystem()` (per ts-morph API), records new fp, invalidates refs for that file. Per Req 7.3, only invoked when the agent explicitly asks — not on any other handler.
