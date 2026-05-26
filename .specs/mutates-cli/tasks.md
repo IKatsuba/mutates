@@ -137,7 +137,7 @@ group, `mutates` can inspect a TypeScript project and write
 unmodified-in-memory files back to disk — there are no operations yet,
 so `save` is a no-op-write unless a future generated `op` mutates.
 
-- [ ] 11. RefTable
+- [x] 11. RefTable
   - Create `packages/cli/src/session/ref-table.ts` implementing `RefTable` per design: `Map<string, { weak: WeakRef<Node>; file: string; generation: number }>`, per-file `generation` counter, `mint(node, file)`, `resolve(ref)`, `invalidateFile(file)`, `resetFile(file)`. Resolve throws an `RpcError(StaleRef)` carrying the file path.
   - Unit tests `ref-table.spec.ts`: mint → resolve happy path; invalidateFile → resolve throws StaleRef; resetFile mints fresh sequence; `node.wasForgotten()` → StaleRef. Use `ts-morph` `InMemoryFileSystemHost` to build a tiny test project.
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
