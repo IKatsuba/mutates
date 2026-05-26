@@ -96,7 +96,7 @@ mutation. The daemon dispatcher rejects every other method with
   - Unit tests `discovery/lockfile.spec.ts`: write+read round trip, dead-PID detection via spawning a child that exits, race lose with second writer.
   - _Requirements: 2.5, 2.7_
 
-- [ ] 7. Daemon entry + session manager (minimum viable)
+- [x] 7. Daemon entry + session manager (minimum viable)
   - Create `packages/cli/src/daemon/entry.ts`: parses `--root <path>` and `--sock <path>` from argv, creates `net.createServer()` listening on the socket, writes the lockfile after successful listen, sets up SIGINT/SIGTERM handlers that gracefully drain and `unlink` the lockfile.
   - Create `packages/cli/src/daemon/session-manager.ts` exposing `SessionManager` with `open(root): Session`, `close(id)`, `list()`, and an idle timer (configurable via `MUTATES_IDLE_TIMEOUT` env / `--idle-timeout` arg, default 600000ms). The timer is reset on every dispatched RPC.
   - Create `packages/cli/src/daemon/dispatcher.ts`: maps method name → handler with `(session: Session | null, params: unknown) => Promise<unknown>` shape. Catches handler errors, wraps non-`RpcError` throws as `InternalError`. At this stage only registers stubs for `session.open`, `session.close`, `session.list` — every other method returns `MethodNotFound`. `session.open` constructs a placeholder `Session` whose body is a thin holder for `{ id, root, openedAt }` — the real Session lands in Group C.
