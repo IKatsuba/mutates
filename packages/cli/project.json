@@ -16,7 +16,7 @@
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
-      "dependsOn": ["gen-commands"],
+      "dependsOn": ["gen-commands", "gen-skills"],
       "options": {
         "outputPath": "dist/packages/cli",
         "main": "packages/cli/src/index.ts",
@@ -48,10 +48,18 @@
         "cwd": "packages/cli"
       }
     },
+    "gen-skills": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-skills.ts",
+        "cwd": "packages/cli"
+      },
+      "outputs": ["{projectRoot}/src/generated/skills.ts"]
+    },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
-      "dependsOn": ["gen-commands"],
+      "dependsOn": ["gen-commands", "gen-skills"],
       "options": {
         "reportsDirectory": "../../coverage/packages/cli"
       }
