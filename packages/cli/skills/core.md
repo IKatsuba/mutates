@@ -61,7 +61,7 @@ A minimal end-to-end transcript looks like this:
 
 ```bash
 mutates open --root /repo --json
-# {"sessionId":"01HX...","root":"/repo"}
+# {"sessionId":"01HX...","tsconfig":"/repo/tsconfig.json","idleTimeoutMs":600000}
 
 mutates snapshot /repo/src/app.ts --json
 # {"entries":[{"kind":"class","name":"AppService","ref":"@n0"}, ...]}
@@ -116,6 +116,15 @@ file-stat cache. Sessions are keyed by the absolute project root.
   any subcommand with `--root /path/to/repo` (or just running it
   inside the repo) is enough to wake a daemon and spin up the
   session. No explicit `open` is required.
+- **tsconfig resolution.** If `<root>/tsconfig.json` exists, ts-morph
+  loads files from it. If it's a **solution-style** tsconfig (empty
+  `files`/`include` with non-empty `references`), `open` returns
+  `INVALID_INPUT` instead of silently giving you an empty session —
+  pass `mutates open --tsconfig <leaf-tsconfig>` (e.g. `tsconfig.lib.json`)
+  to point at the project that actually lists source files. When no
+  tsconfig is found at all, the session falls back to globbing
+  `**/*.{ts,tsx}` under the root, excluding `node_modules`, `dist`,
+  `.git`, `tmp`, `coverage`.
 - **Idle timeout.** Each session has an idle timeout, defaulting to
   **600 seconds** since the last RPC. The timeout is overridable
   via the `MUTATES_IDLE_TIMEOUT` environment variable (read by the
@@ -124,12 +133,15 @@ file-stat cache. Sessions are keyed by the absolute project root.
   timeout entirely; use that sparingly.
 - **Listing.** To enumerate live sessions for a root, run
   `mutates sessions list --root <root> --json`. Output is a JSON
-  array of `{ id, root, openedAt, lastActivityAt }`.
+  array of `{ id, root, ageMs, unsavedFiles }`.
 - **Closing.** `mutates close --all --root <root>` closes every
-  session for that root; `mutates close <sessionId>` closes one by
-  id. When the daemon process itself exits (idle timeout fires,
-  explicit kill, host reboot), all in-memory state is gone —
-  anything you didn't `save` is lost.
+  session for that root; `mutates close --session <sessionId>` closes
+  one by id. `--all` also tells the daemon to shut down, so the socket
+  and lockfile clean up immediately rather than waiting for the idle
+  timer. If `--all` finds nothing to close, the response is
+  `{ closed: [], noop: true }`. When the daemon process itself exits
+  (idle timeout fires, explicit kill, host reboot), all in-memory state
+  is gone — anything you didn't `save` is lost.
 - **Multiple sessions per root.** Each `open` call mints a new
   session, so several agents can drive the same repo
   independently without trampling each other's refs. They share
@@ -141,8 +153,11 @@ file-stat cache. Sessions are keyed by the absolute project root.
 Every category exposes some combination of `get-*`, `add-*`, `edit-*`,
 and `remove-*` verbs. Run `mutates schema` for the full JSON-Schema
 payload of every op, or `mutates schema --op <opName>` for one. The
-list below is one line per category — for exhaustive shapes use the
-schema command.
+catalogue also covers the hand-written core ops (`snapshot`, `find`,
+`diff`, `save`, `reload`, `listFiles`, `session.open`,
+`session.close`, `session.list`) so you can introspect their param
+shapes the same way. The list below is one line per category — for
+exhaustive shapes use the schema command.
 
 - **classes** — top-level `class` declarations.
 - **methods** — methods on any host (class or object literal),
@@ -170,6 +185,7 @@ schema command.
 - **interfaces** — interface declarations (members are edited
   through the same payload).
 - **enums** — enum declarations.
+- **type-aliases** — top-level `type X = …` aliases.
 - **variables** — `const` / `let` / `var` declarations (one
   statement at a time, even if the statement contains multiple
   bindings).
