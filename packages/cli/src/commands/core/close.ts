@@ -49,12 +49,14 @@ export default defineCommand({
       const conn = await connectClient({ root });
       try {
         const closed: string[] = [];
+        let noop = false;
         if (args.all) {
           const sessions = await conn.call<Array<{ id: string }>>('session.list', {});
           for (const s of sessions) {
             await conn.call('session.close', { sessionId: s.id });
             closed.push(s.id);
           }
+          noop = closed.length === 0;
           // `--all` is the user saying "I'm done with this daemon" — shut it
           // down so the lockfile and socket clean up immediately, instead
           // of leaving the daemon hanging until its idle timer fires.
@@ -69,7 +71,15 @@ export default defineCommand({
           await conn.call('session.close', { sessionId: args.session });
           closed.push(args.session);
         }
-        renderResult({ closed }, args.json ? 'json' : 'text');
+        const payload: { closed: string[]; noop?: boolean } = { closed };
+        if (noop) payload.noop = true;
+        if (args.json) {
+          renderResult(payload, 'json');
+        } else if (noop) {
+          renderResult(`no live sessions for ${root}`, 'text');
+        } else {
+          renderResult(payload, 'text');
+        }
       } finally {
         await conn.close();
       }
