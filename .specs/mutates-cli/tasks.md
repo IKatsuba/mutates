@@ -90,7 +90,7 @@ mutation. The daemon dispatcher rejects every other method with
   - Unit tests `proto/jsonrpc.spec.ts`: round-trips, partial-chunk reassembly across `data` events, malformed lines reject with `ParseError`.
   - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 6. Lockfile discovery
+- [x] 6. Lockfile discovery
   - Create `packages/cli/src/discovery/lockfile.ts` exporting `lockfilePath(root: string): string` (hashes absolute root, places file under `$XDG_RUNTIME_DIR/mutates/sessions/<hash>.json` on Unix, falling back to `os.tmpdir()`); `write(lock: SessionLockfile)`; `read(root)` returning `null` if missing or PID is dead (`process.kill(pid, 0)` → `ESRCH`); `unlink(root)`.
   - Use `O_EXCL | O_CREAT` to make `write` race-safe.
   - Unit tests `discovery/lockfile.spec.ts`: write+read round trip, dead-PID detection via spawning a child that exits, race lose with second writer.
