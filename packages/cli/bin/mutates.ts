@@ -2,6 +2,7 @@ import { defineCommand, runMain } from 'citty';
 
 import pkg from '../package.json';
 import open from '../src/commands/core/open';
+import { GENERATED_COMMANDS } from '../src/commands/generated';
 
 export const main = defineCommand({
   meta: {
@@ -19,6 +20,7 @@ export const main = defineCommand({
     save: () => import('../src/commands/core/save').then((m) => m.default),
     reload: () => import('../src/commands/core/reload').then((m) => m.default),
     'list-files': () => import('../src/commands/core/list-files').then((m) => m.default),
+    ...GENERATED_COMMANDS,
   },
   run() {
     // eslint-disable-next-line no-console

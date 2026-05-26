@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { renderUsage, runCommand } from 'citty';
@@ -58,6 +58,73 @@ describe('mutates bin', () => {
     expect(usage).toContain('save');
     expect(usage).toContain('reload');
     expect(usage).toContain('list-files');
+  });
+
+  it('lists generated subcommands like add-classes and edit-methods', async () => {
+    const usage = await renderUsage(main);
+    expect(usage).toContain('add-classes');
+    expect(usage).toContain('edit-methods');
+    expect(usage).toContain('remove-imports');
+    expect(usage).toContain('get-functions');
+  });
+});
+
+describe('mutates bin (generated op E2E)', () => {
+  let runtimeDir: string;
+  let projectRoot: string;
+
+  beforeEach(() => {
+    runtimeDir = mkdtempSync(join(tmpdir(), 'mutates-runtime-'));
+    process.env['MUTATES_RUNTIME_DIR'] = runtimeDir;
+    projectRoot = mkdtempSync(join(tmpdir(), 'mutates-root-'));
+    mkdirSync(join(projectRoot, 'src'));
+    writeFileSync(join(projectRoot, 'src/foo.ts'), `export {};\n`);
+  });
+
+  afterEach(() => {
+    unlinkLockfile(projectRoot);
+    delete process.env['MUTATES_RUNTIME_DIR'];
+    rmSync(runtimeDir, { recursive: true, force: true });
+    rmSync(projectRoot, { recursive: true, force: true });
+  });
+
+  it('open → add-classes → save writes class Foo to disk', async () => {
+    const { daemon } = await startDaemonAndConnect(projectRoot);
+    try {
+      const openRun = await capture(() =>
+        runCommand(main, { rawArgs: ['open', '--root', projectRoot, '--json'] }),
+      );
+      const opened = JSON.parse(openRun.stdout.trim()) as { sessionId: string };
+
+      const target = join(projectRoot, 'src/foo.ts');
+      const addRun = await capture(() =>
+        runCommand(main, {
+          rawArgs: [
+            'add-classes',
+            '--file',
+            target,
+            '--json',
+            '{"name":"Foo","isExported":true}',
+            '--root',
+            projectRoot,
+            '--session',
+            opened.sessionId,
+          ],
+        }),
+      );
+      expect(addRun.stderr).toBe('');
+
+      await capture(() =>
+        runCommand(main, {
+          rawArgs: ['save', '--root', projectRoot, '--session', opened.sessionId, '--json'],
+        }),
+      );
+
+      const onDisk = readFileSync(target, 'utf8');
+      expect(onDisk).toContain('class Foo');
+    } finally {
+      await daemon.shutdown();
+    }
   });
 });
 

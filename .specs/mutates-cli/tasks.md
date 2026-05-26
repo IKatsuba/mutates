@@ -219,7 +219,7 @@ commands work.
   - Integration test `daemon/handlers/op.spec.ts`: call `op` with `addClasses` against an InMemoryFileSystemHost project, assert source file content includes the new class, assert refs for that file are invalidated.
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.6, 8.3_
 
-- [ ] 22. Wire generated citty commands into the bin
+- [x] 22. Wire generated citty commands into the bin
   - Update `packages/cli/scripts/gen-commands/main.ts` to also emit `packages/cli/src/commands/generated/index.ts`: a const map `{ "add-classes": () => import("./classes/add").then(m => m.default), ... }` over every generated command.
   - Update `bin/mutates.ts` to spread this generated map into its `subCommands` (still lazy).
   - E2E test: `mutates add-classes --file 'src/**/*.ts' --json '{"name":"Foo","isExported":true}'` against a tmpdir fixture; assert the file contains `class Foo`.
