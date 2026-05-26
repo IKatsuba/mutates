@@ -91,6 +91,24 @@ describe('mutates skills', () => {
     expect(run.stdout.length).toBeGreaterThan(0);
   });
 
+  it('skills get core stdout byte length matches the manifest sizeBytes', async () => {
+    // `mutates skills list` returns the source-of-truth byte length, and
+    // `mutates skills get core` writes the embedded content verbatim to
+    // stdout. No trimming or newline rewriting on either side — the two
+    // numbers must match exactly so agents can stream the markdown
+    // straight into a fixed-size buffer.
+    const list = await capture(() => runCommand(main, { rawArgs: ['skills', 'list'] }));
+    const manifest = JSON.parse(list.stdout.trim()) as Array<{
+      name: string;
+      sizeBytes: number;
+    }>;
+    const core = manifest.find((e) => e.name === 'core');
+    expect(core).toBeDefined();
+
+    const got = await capture(() => runCommand(main, { rawArgs: ['skills', 'get', 'core'] }));
+    expect(Buffer.byteLength(got.stdout, 'utf8')).toBe(core!.sizeBytes);
+  });
+
   it('skills get on an unknown name exits with NOT_FOUND', async () => {
     const prevExitCode = process.exitCode;
     process.exitCode = undefined;

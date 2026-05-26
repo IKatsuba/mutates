@@ -245,23 +245,23 @@ Source-of-truth `.md` checked in, codegen'd to TS for single-file bin
 compatibility. After this group, an agent invoking `mutates skills get
 core` receives the same content baked into the installed version.
 
-- [ ] 25. Source markdown
+- [x] 25. Source markdown
   - Create `packages/cli/skills/core.md`: snapshot/refs workflow, common patterns, troubleshooting `STALE_REF` and `STALE_FILE`, every operation category at one-paragraph depth, and references to `mutates schema` for exhaustive payload shapes.
   - _Requirements: 9.2_
 
-- [ ] 26. `gen-skills.ts` script + Nx target
+- [x] 26. `gen-skills.ts` script + Nx target
   - Create `packages/cli/scripts/gen-skills.ts` reading every `skills/*.md` and emitting `packages/cli/src/generated/skills.ts` with `export const SKILLS = { [name]: <JSON.stringify(content)> } as const;` plus `export const MANIFEST = [{ name, description: <h1 first paragraph>, sizeBytes }]`.
   - Add `gen-skills` target in `project.json`; `build.dependsOn` adds `gen-skills`.
   - Unit test: feed a fixture markdown, assert generated module re-exports the same string verbatim.
   - _Requirements: 9.1, 9.2, 9.3_
 
-- [ ] 27. `mutates skills` command
+- [x] 27. `mutates skills` command
   - `src/commands/core/skills.ts` with subcommands `list` (prints `MANIFEST`) and `get <name>` (prints `SKILLS[name]` or exits non-zero with `NOT_FOUND`).
   - Wire into `bin/mutates.ts`.
   - E2E test: `mutates skills list` returns at least `core`; `mutates skills get core` prints the markdown.
   - _Requirements: 9.1, 9.2_
 
-- [ ] 28. Checkpoint — Group E verification
+- [x] 28. Checkpoint — Group E verification
   - Run codegen + tests: `npx nx run cli:gen-skills && npx nx run cli:test --watch=false`.
   - E2E: `mutates skills get core | wc -c` matches the expected size from the manifest.
   - Build + lint green.
