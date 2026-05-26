@@ -286,7 +286,7 @@ whole stack exists.
   - `packages/cli/src/client/output.spec.ts`: parameterized over every error code in `ErrorCode`; force each error path by sending a crafted RPC, assert the stderr payload is valid JSON with `{ code, message, details }` and the exit code is non-zero per the design table.
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 32. Package README
+- [x] 32. Package README
   - Create `packages/cli/README.md` covering install, the snapshot/act/re-snapshot loop, link to `mutates skills get core` for the full guide.
   - _Requirements: (none — discoverability)_
 
