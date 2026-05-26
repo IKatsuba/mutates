@@ -1,0 +1,533 @@
+{
+  "count": 66,
+  "ops": [
+    {
+      "op": "addAccessors",
+      "verb": "add",
+      "category": "accessors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/accessors/add.ts",
+      "command": "src/commands/generated/accessors/add.ts"
+    },
+    {
+      "op": "addClasses",
+      "verb": "add",
+      "category": "classes",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/classes/add.ts",
+      "command": "src/commands/generated/classes/add.ts"
+    },
+    {
+      "op": "addClassProperties",
+      "verb": "add",
+      "category": "class-properties",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/class-properties/add.ts",
+      "command": "src/commands/generated/class-properties/add.ts"
+    },
+    {
+      "op": "addConstructors",
+      "verb": "add",
+      "category": "constructors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/constructors/add.ts",
+      "command": "src/commands/generated/constructors/add.ts"
+    },
+    {
+      "op": "addDecorators",
+      "verb": "add",
+      "category": "decorators",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/decorators/add.ts",
+      "command": "src/commands/generated/decorators/add.ts"
+    },
+    {
+      "op": "addEnums",
+      "verb": "add",
+      "category": "enums",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/enums/add.ts",
+      "command": "src/commands/generated/enums/add.ts"
+    },
+    {
+      "op": "addExports",
+      "verb": "add",
+      "category": "exports",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/exports/add.ts",
+      "command": "src/commands/generated/exports/add.ts"
+    },
+    {
+      "op": "addFunctions",
+      "verb": "add",
+      "category": "functions",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/functions/add.ts",
+      "command": "src/commands/generated/functions/add.ts"
+    },
+    {
+      "op": "addImports",
+      "verb": "add",
+      "category": "imports",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/imports/add.ts",
+      "command": "src/commands/generated/imports/add.ts"
+    },
+    {
+      "op": "addInterfaces",
+      "verb": "add",
+      "category": "interfaces",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/interfaces/add.ts",
+      "command": "src/commands/generated/interfaces/add.ts"
+    },
+    {
+      "op": "addMethods",
+      "verb": "add",
+      "category": "methods",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/methods/add.ts",
+      "command": "src/commands/generated/methods/add.ts"
+    },
+    {
+      "op": "addObjectProperty",
+      "verb": "add",
+      "category": "object-property",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/object-property/add.ts",
+      "command": "src/commands/generated/object-property/add.ts"
+    },
+    {
+      "op": "addParams",
+      "verb": "add",
+      "category": "params",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/params/add.ts",
+      "command": "src/commands/generated/params/add.ts"
+    },
+    {
+      "op": "addSourceFiles",
+      "verb": "add",
+      "category": "source-files",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/source-files/add.ts",
+      "command": "src/commands/generated/source-files/add.ts"
+    },
+    {
+      "op": "addVariables",
+      "verb": "add",
+      "category": "variables",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/variables/add.ts",
+      "command": "src/commands/generated/variables/add.ts"
+    },
+    {
+      "op": "editAccessors",
+      "verb": "edit",
+      "category": "accessors",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/accessors/edit.ts",
+      "command": "src/commands/generated/accessors/edit.ts"
+    },
+    {
+      "op": "editClasses",
+      "verb": "edit",
+      "category": "classes",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/classes/edit.ts",
+      "command": "src/commands/generated/classes/edit.ts"
+    },
+    {
+      "op": "editClassProperties",
+      "verb": "edit",
+      "category": "class-properties",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/class-properties/edit.ts",
+      "command": "src/commands/generated/class-properties/edit.ts"
+    },
+    {
+      "op": "editConstructors",
+      "verb": "edit",
+      "category": "constructors",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/constructors/edit.ts",
+      "command": "src/commands/generated/constructors/edit.ts"
+    },
+    {
+      "op": "editDecorators",
+      "verb": "edit",
+      "category": "decorators",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/decorators/edit.ts",
+      "command": "src/commands/generated/decorators/edit.ts"
+    },
+    {
+      "op": "editEnums",
+      "verb": "edit",
+      "category": "enums",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/enums/edit.ts",
+      "command": "src/commands/generated/enums/edit.ts"
+    },
+    {
+      "op": "editExports",
+      "verb": "edit",
+      "category": "exports",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/exports/edit.ts",
+      "command": "src/commands/generated/exports/edit.ts"
+    },
+    {
+      "op": "editFunctions",
+      "verb": "edit",
+      "category": "functions",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/functions/edit.ts",
+      "command": "src/commands/generated/functions/edit.ts"
+    },
+    {
+      "op": "editImports",
+      "verb": "edit",
+      "category": "imports",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/imports/edit.ts",
+      "command": "src/commands/generated/imports/edit.ts"
+    },
+    {
+      "op": "editInterfaces",
+      "verb": "edit",
+      "category": "interfaces",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/interfaces/edit.ts",
+      "command": "src/commands/generated/interfaces/edit.ts"
+    },
+    {
+      "op": "editMethods",
+      "verb": "edit",
+      "category": "methods",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/methods/edit.ts",
+      "command": "src/commands/generated/methods/edit.ts"
+    },
+    {
+      "op": "editObjectProperties",
+      "verb": "edit",
+      "category": "object-properties",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/object-properties/edit.ts",
+      "command": "src/commands/generated/object-properties/edit.ts"
+    },
+    {
+      "op": "editParams",
+      "verb": "edit",
+      "category": "params",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/params/edit.ts",
+      "command": "src/commands/generated/params/edit.ts"
+    },
+    {
+      "op": "editVariables",
+      "verb": "edit",
+      "category": "variables",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/variables/edit.ts",
+      "command": "src/commands/generated/variables/edit.ts"
+    },
+    {
+      "op": "getAccessors",
+      "verb": "get",
+      "category": "accessors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/accessors/get.ts",
+      "command": "src/commands/generated/accessors/get.ts"
+    },
+    {
+      "op": "getAllDecorators",
+      "verb": "get",
+      "category": "all-decorators",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/all-decorators/get.ts",
+      "command": "src/commands/generated/all-decorators/get.ts"
+    },
+    {
+      "op": "getClassAccessors",
+      "verb": "get",
+      "category": "class-accessors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/class-accessors/get.ts",
+      "command": "src/commands/generated/class-accessors/get.ts"
+    },
+    {
+      "op": "getClasses",
+      "verb": "get",
+      "category": "classes",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/classes/get.ts",
+      "command": "src/commands/generated/classes/get.ts"
+    },
+    {
+      "op": "getClassMethods",
+      "verb": "get",
+      "category": "class-methods",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/class-methods/get.ts",
+      "command": "src/commands/generated/class-methods/get.ts"
+    },
+    {
+      "op": "getClassProperties",
+      "verb": "get",
+      "category": "class-properties",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/class-properties/get.ts",
+      "command": "src/commands/generated/class-properties/get.ts"
+    },
+    {
+      "op": "getConstructors",
+      "verb": "get",
+      "category": "constructors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/constructors/get.ts",
+      "command": "src/commands/generated/constructors/get.ts"
+    },
+    {
+      "op": "getDecorators",
+      "verb": "get",
+      "category": "decorators",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/decorators/get.ts",
+      "command": "src/commands/generated/decorators/get.ts"
+    },
+    {
+      "op": "getEnums",
+      "verb": "get",
+      "category": "enums",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/enums/get.ts",
+      "command": "src/commands/generated/enums/get.ts"
+    },
+    {
+      "op": "getExports",
+      "verb": "get",
+      "category": "exports",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/exports/get.ts",
+      "command": "src/commands/generated/exports/get.ts"
+    },
+    {
+      "op": "getFunctions",
+      "verb": "get",
+      "category": "functions",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/functions/get.ts",
+      "command": "src/commands/generated/functions/get.ts"
+    },
+    {
+      "op": "getImportRefs",
+      "verb": "get",
+      "category": "import-refs",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/import-refs/get.ts",
+      "command": "src/commands/generated/import-refs/get.ts"
+    },
+    {
+      "op": "getImports",
+      "verb": "get",
+      "category": "imports",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/imports/get.ts",
+      "command": "src/commands/generated/imports/get.ts"
+    },
+    {
+      "op": "getInterfaces",
+      "verb": "get",
+      "category": "interfaces",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/interfaces/get.ts",
+      "command": "src/commands/generated/interfaces/get.ts"
+    },
+    {
+      "op": "getMethods",
+      "verb": "get",
+      "category": "methods",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/methods/get.ts",
+      "command": "src/commands/generated/methods/get.ts"
+    },
+    {
+      "op": "getNamedImports",
+      "verb": "get",
+      "category": "named-imports",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/named-imports/get.ts",
+      "command": "src/commands/generated/named-imports/get.ts"
+    },
+    {
+      "op": "getObjectAccessors",
+      "verb": "get",
+      "category": "object-accessors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/object-accessors/get.ts",
+      "command": "src/commands/generated/object-accessors/get.ts"
+    },
+    {
+      "op": "getObjectMethods",
+      "verb": "get",
+      "category": "object-methods",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/object-methods/get.ts",
+      "command": "src/commands/generated/object-methods/get.ts"
+    },
+    {
+      "op": "getObjectProperties",
+      "verb": "get",
+      "category": "object-properties",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/object-properties/get.ts",
+      "command": "src/commands/generated/object-properties/get.ts"
+    },
+    {
+      "op": "getParams",
+      "verb": "get",
+      "category": "params",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/params/get.ts",
+      "command": "src/commands/generated/params/get.ts"
+    },
+    {
+      "op": "getSourceFile",
+      "verb": "get",
+      "category": "source-file",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/source-file/get.ts",
+      "command": "src/commands/generated/source-file/get.ts"
+    },
+    {
+      "op": "getSourceFiles",
+      "verb": "get",
+      "category": "source-files",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/source-files/get.ts",
+      "command": "src/commands/generated/source-files/get.ts"
+    },
+    {
+      "op": "getVariables",
+      "verb": "get",
+      "category": "variables",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/variables/get.ts",
+      "command": "src/commands/generated/variables/get.ts"
+    },
+    {
+      "op": "removeAccessors",
+      "verb": "remove",
+      "category": "accessors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/accessors/remove.ts",
+      "command": "src/commands/generated/accessors/remove.ts"
+    },
+    {
+      "op": "removeClasses",
+      "verb": "remove",
+      "category": "classes",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/classes/remove.ts",
+      "command": "src/commands/generated/classes/remove.ts"
+    },
+    {
+      "op": "removeClassProperties",
+      "verb": "remove",
+      "category": "class-properties",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/class-properties/remove.ts",
+      "command": "src/commands/generated/class-properties/remove.ts"
+    },
+    {
+      "op": "removeConstructors",
+      "verb": "remove",
+      "category": "constructors",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/constructors/remove.ts",
+      "command": "src/commands/generated/constructors/remove.ts"
+    },
+    {
+      "op": "removeDecorators",
+      "verb": "remove",
+      "category": "decorators",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/decorators/remove.ts",
+      "command": "src/commands/generated/decorators/remove.ts"
+    },
+    {
+      "op": "removeEnums",
+      "verb": "remove",
+      "category": "enums",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/enums/remove.ts",
+      "command": "src/commands/generated/enums/remove.ts"
+    },
+    {
+      "op": "removeExports",
+      "verb": "remove",
+      "category": "exports",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/exports/remove.ts",
+      "command": "src/commands/generated/exports/remove.ts"
+    },
+    {
+      "op": "removeFunctions",
+      "verb": "remove",
+      "category": "functions",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/functions/remove.ts",
+      "command": "src/commands/generated/functions/remove.ts"
+    },
+    {
+      "op": "removeImports",
+      "verb": "remove",
+      "category": "imports",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/imports/remove.ts",
+      "command": "src/commands/generated/imports/remove.ts"
+    },
+    {
+      "op": "removeInterfaces",
+      "verb": "remove",
+      "category": "interfaces",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/interfaces/remove.ts",
+      "command": "src/commands/generated/interfaces/remove.ts"
+    },
+    {
+      "op": "removeMethods",
+      "verb": "remove",
+      "category": "methods",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/methods/remove.ts",
+      "command": "src/commands/generated/methods/remove.ts"
+    },
+    {
+      "op": "removeObjectProperties",
+      "verb": "remove",
+      "category": "object-properties",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/object-properties/remove.ts",
+      "command": "src/commands/generated/object-properties/remove.ts"
+    },
+    {
+      "op": "removeParams",
+      "verb": "remove",
+      "category": "params",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/params/remove.ts",
+      "command": "src/commands/generated/params/remove.ts"
+    },
+    {
+      "op": "removeVariables",
+      "verb": "remove",
+      "category": "variables",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/variables/remove.ts",
+      "command": "src/commands/generated/variables/remove.ts"
+    }
+  ]
+}

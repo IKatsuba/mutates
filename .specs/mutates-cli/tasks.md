@@ -206,7 +206,7 @@ commands work.
   - Unit tests `gen-commands/classifier.spec.ts` and `emit-*.spec.ts`: fixed input → snapshot output; cover every `targetShape`.
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 20. Driver script + Nx target
+- [x] 20. Driver script + Nx target
   - Create `packages/cli/scripts/gen-commands/main.ts` invoking the classifier and writing files into `packages/cli/src/daemon/handlers/generated/<category>/<verb>.ts` and `packages/cli/src/commands/generated/<category>/<verb>.ts`, plus `packages/cli/src/generated/op-schemas.ts` (one named export per op).
   - Add `packages/cli/.gitignore` listing `src/generated/`, `src/commands/generated/`, `src/daemon/handlers/generated/`.
   - In `packages/cli/project.json`, add a `gen-commands` target running `tsx scripts/gen-commands/main.ts` and add it as a dependency of `build` via `dependsOn: ["gen-commands"]`. Add `tsx` to devDependencies (or use `ts-node`).

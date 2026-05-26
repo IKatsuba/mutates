@@ -48,7 +48,11 @@ const VERB_RE = /^(add|edit|remove|get)([A-Z][a-zA-Z0-9]*)$/;
  * the emitter never tries to bind a command to e.g. `getDeclarationCreator`.
  */
 export function classify(coreProject: Project): Classified[] {
-  const idx = coreProject.getSourceFileOrThrow('packages/core/src/index.ts');
+  const idx =
+    coreProject
+      .getSourceFiles()
+      .find((f) => /packages\/core\/src\/index\.ts$/.test(f.getFilePath())) ??
+    coreProject.getSourceFileOrThrow('packages/core/src/index.ts');
   const namedToSymbol = new Map<string, ReturnType<typeof idx.getExportSymbols>[number]>();
   for (const sym of idx.getExportSymbols()) {
     namedToSymbol.set(sym.getName(), sym);

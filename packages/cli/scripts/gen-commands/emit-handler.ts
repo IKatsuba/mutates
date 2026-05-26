@@ -16,14 +16,23 @@ const BANNER = '// GENERATED — do not edit. Run `nx run cli:gen-commands` to r
 export function emitHandler(c: Classified): string {
   const handlerConst = `${c.coreName}Handler`;
   const body = renderHandlerBody(c);
+  const runtimeImports: string[] = [];
+  if (c.targetShape === 'nodes' || c.targetShape === 'declarations-editor') {
+    runtimeImports.push('resolveDeclarations');
+  }
+  if (c.targetShape === 'query') {
+    runtimeImports.push('mintNodeRefs');
+  }
+  const runtimeImport = runtimeImports.length
+    ? `import { ${runtimeImports.join(', ')} } from '../_runtime';\n`
+    : '';
   return `${BANNER}
 import { ${c.coreName} } from '@mutates/core';
 
 import { ErrorCode } from '../../../../proto/error-codes';
 import { RpcError } from '../../../../proto/jsonrpc';
 import type { Handler } from '../../../dispatcher';
-import { mintNodeRefs, resolveDeclarations } from '../_runtime';
-
+${runtimeImport}
 export const ${handlerConst}: Handler = ({ session }, params) => {
   if (!session) {
     throw new RpcError(ErrorCode.SessionNotFound, '${c.coreName}: session not found');

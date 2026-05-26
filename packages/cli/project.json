@@ -16,6 +16,7 @@
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["gen-commands"],
       "options": {
         "outputPath": "dist/packages/cli",
         "main": "packages/cli/src/index.ts",
@@ -28,9 +29,29 @@
         "assets": ["packages/cli/*.md"]
       }
     },
+    "gen-commands": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-commands/main.ts",
+        "cwd": "packages/cli"
+      },
+      "outputs": [
+        "{projectRoot}/src/daemon/handlers/generated",
+        "{projectRoot}/src/commands/generated",
+        "{projectRoot}/src/generated"
+      ]
+    },
+    "gen-commands:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/gen-commands/main.ts --check",
+        "cwd": "packages/cli"
+      }
+    },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
+      "dependsOn": ["gen-commands"],
       "options": {
         "reportsDirectory": "../../coverage/packages/cli"
       }
