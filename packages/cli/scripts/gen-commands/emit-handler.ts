@@ -54,19 +54,22 @@ function renderHandlerBody(c: Classified): string {
     throw new RpcError(ErrorCode.InvalidInput, '${c.coreName}: target.file (glob) required');
   }
   return session.withActiveProject(() => {
-    const result = ${c.coreName}(file, p.data as never);
+    const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
+    const result = fn(file, p.data);
     return { ok: true, result };
   });`;
     case 'query':
       return `  return session.withActiveProject(() => {
     const query = (p.target?.filter ?? p.data ?? undefined) as never;
-    const result = ${c.coreName}(query);
+    const fn = ${c.coreName} as unknown as (q?: unknown) => unknown;
+    const result = fn(query);
     return { ok: true, result: mintNodeRefs(session, result as unknown) };
   });`;
     case 'nodes':
       return `  return session.withActiveProject(() => {
     const declarations = resolveDeclarations(session, '${c.category}', p.target);
-    const result = ${c.coreName}(declarations as never, p.data as never);
+    const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
+    const result = fn(declarations, p.data);
     return { ok: true, result };
   });`;
     case 'declarations-editor':
@@ -74,7 +77,8 @@ function renderHandlerBody(c: Classified): string {
     const declarations = resolveDeclarations(session, '${c.category}', p.target);
     const overrides = (p.data ?? {}) as Record<string, unknown>;
     const editor = (structure: Record<string, unknown>) => ({ ...structure, ...overrides });
-    const result = ${c.coreName}(declarations as never, editor as never);
+    const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
+    const result = fn(declarations, editor);
     return { ok: true, result };
   });`;
     case 'no-params':

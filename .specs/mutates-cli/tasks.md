@@ -231,7 +231,7 @@ commands work.
   - Unit test verifies the JSON output for at least one op matches the expected JSON Schema shape (Draft 2020-12 minimum: `type`, `properties`, `required`).
   - _Requirements: 9.4_
 
-- [ ] 24. Checkpoint — Group D verification
+- [x] 24. Checkpoint — Group D verification
   - Run new tests and the codegen target: `npx nx run cli:gen-commands && npx nx run cli:test --watch=false`.
   - E2E spot-check 4 commands from different categories: `add-classes`, `edit-methods`, `remove-imports`, `get-functions`.
   - Confirm `mutates schema` returns a stable manifest covering every category enumerated in Req 5.1.

@@ -16,7 +16,7 @@ describe('emitHandler', () => {
     expect(src).toContain('import { addClasses }');
     expect(src).toContain('export const addClassesHandler');
     expect(src).toContain('target.file (glob) required');
-    expect(src).toContain('addClasses(file, p.data');
+    expect(src).toContain('fn(file, p.data)');
   });
 
   it('emits a nodes-shaped handler', () => {
@@ -24,7 +24,7 @@ describe('emitHandler', () => {
       make({ verb: 'add', category: 'methods', coreName: 'addMethods', targetShape: 'nodes' }),
     );
     expect(src).toContain('resolveDeclarations(session');
-    expect(src).toContain('addMethods(declarations as never');
+    expect(src).toContain('fn(declarations, p.data)');
   });
 
   it('emits a query-shaped handler that mints refs', () => {
@@ -32,7 +32,7 @@ describe('emitHandler', () => {
       make({ verb: 'get', category: 'classes', coreName: 'getClasses', targetShape: 'query' }),
     );
     expect(src).toContain('mintNodeRefs(session, result as unknown)');
-    expect(src).toContain('getClasses(query)');
+    expect(src).toContain('fn(query)');
   });
 
   it('emits an editor-shaped handler', () => {
@@ -45,7 +45,7 @@ describe('emitHandler', () => {
       }),
     );
     expect(src).toContain('const editor = (structure');
-    expect(src).toContain('editClasses(declarations as never, editor as never)');
+    expect(src).toContain('fn(declarations, editor)');
   });
 
   it('emits a no-params handler', () => {
