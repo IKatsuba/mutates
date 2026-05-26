@@ -155,7 +155,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Unit tests `session.spec.ts` against `InMemoryFileSystemHost` (use `createTestingProject()` style): construct session, load a fake file, mutate in-memory via direct ts-morph, observe `dirtyFiles()`; withActiveProject correctly nests and restores.
   - _Requirements: 2.1, 2.5, 5.6, 7.1_
 
-- [ ] 14. Snapshot renderer
+- [x] 14. Snapshot renderer
   - Create `packages/cli/src/session/snapshot.ts` with `snapshotFile(session, file): SnapshotResult` and `snapshotChildren(session, parentRef): SnapshotResult`. Top-level walker enumerates: imports, classes, functions, variables, interfaces, enums, type aliases, exports — in source order. Drill-down enumerates members for `ClassDeclaration` / `InterfaceDeclaration` and statements for functions.
   - Each entry: `{ ref, kind, name?, modifiers?, children? }`. Modifiers derived from ts-morph helpers (`isExported`, `isAsync`, `isDefaultExport`).
   - Create `packages/cli/src/client/format-snapshot.ts` for the text rendering shown in design.md.
