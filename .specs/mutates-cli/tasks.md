@@ -184,7 +184,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - E2E test exercising the read-only path: `mutates open` → `mutates snapshot src/app.ts` → `mutates diff` (expect empty) against a tmpdir fixture.
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 5.5, 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 18. Checkpoint — Group C verification
+- [x] 18. Checkpoint — Group C verification
   - Run new tests: `npx nx run cli:test --watch=false`.
   - E2E: against a checked-in fixture tmpdir, run snapshot/find/diff/save and verify stdout shapes via JSON parsing in the test.
   - Confirm the lockfile path is correctly cleaned on shutdown after these heavier flows.
