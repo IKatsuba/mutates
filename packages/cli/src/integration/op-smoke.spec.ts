@@ -173,12 +173,10 @@ describe('op smoke test — every category', () => {
       });
       expect('result' in resp).toBe(true);
       // op handler shape: { ok, result: <handler-return>, mutated }.
-      // Generated handler shape: { ok, result: <mintedRefs> }.
-      const opResult = (resp as { result: { result: { result: unknown } } }).result;
-      const inner = (opResult.result as { ok: boolean; result: unknown }).result as Array<{
-        ref?: string;
-        name?: string;
-      }>;
+      // Generated handler now returns the minted-ref array directly.
+      const opResult = (resp as { result: { ok: boolean; result: unknown; mutated: string[] } })
+        .result;
+      const inner = opResult.result as Array<{ ref?: string; name?: string }>;
       // The handler returned successfully and the shape is a minted-ref
       // array. The exact contents depend on whether the active project
       // picked up the no-tsconfig source files, which is covered in
