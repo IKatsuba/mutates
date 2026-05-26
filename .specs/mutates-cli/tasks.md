@@ -61,13 +61,13 @@ callers go through `createProject` / `resetActiveProject`.
   - **Why safe**: pure additive named export. No existing callers; no shape change to `getActiveProject` / `resetActiveProject` / `createProject`. Verified inert until consumed in Group C.
   - _Requirements: 5.6_
 
-- [ ] 3. Stub `bin/mutates.ts` with the citty root (no subcommands yet)
+- [x] 3. Stub `bin/mutates.ts` with the citty root (no subcommands yet)
   - Create `packages/cli/bin/mutates.ts`: import `defineCommand` and `runMain` from `citty`, export `main` with `meta.name = "mutates"`, `meta.version` read from package.json at build time, and an empty `subCommands` object. Top-level `run` prints a hint to use `--help`.
   - Add a smoke test `packages/cli/bin/mutates.spec.ts` that invokes `main` via `runCommand` with `--help` and asserts the rendered usage contains `mutates`.
   - **Why safe**: standalone bin with no callers; not yet wired into npm publish.
   - _Requirements: 1.1_
 
-- [ ] 4. Checkpoint — Group A verification
+- [x] 4. Checkpoint — Group A verification
   - Run new tests: `npx nx run cli:test --watch=false` and `npx nx run core:test --watch=false`.
   - Run existing tests for core to catch regressions on the new export: `npx nx affected -t test --base=HEAD~1`.
   - Build everything: `npx nx run-many -t build` — confirm both `core` and `cli` build green.
