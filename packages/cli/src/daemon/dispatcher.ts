@@ -1,7 +1,7 @@
 import { ErrorCode } from '../proto/error-codes';
 import {
   RpcError as RpcErrorClass,
-  type RpcError as RpcErrorEnvelope,
+  type RpcErrorResponse,
   type RpcMessage,
   type RpcRequest,
   type RpcResponse,
@@ -100,7 +100,7 @@ function errorResponse(
   message: string,
   data?: unknown,
 ): RpcResponse {
-  const error: RpcErrorEnvelope['error'] = { code, message };
+  const error: RpcErrorResponse['error'] = { code, message };
   if (data !== undefined) error.data = data;
   return { jsonrpc: '2.0', id, error };
 }

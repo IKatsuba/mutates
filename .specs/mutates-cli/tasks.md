@@ -118,7 +118,7 @@ mutation. The daemon dispatcher rejects every other method with
   - E2E test `bin/mutates.spec.ts` extending Group A's: run `mutates open`, verify lockfile, run `mutates sessions list`, run `mutates close --all`, verify lockfile gone.
   - _Requirements: 1.1, 2.2, 2.3, 2.6, 2.7, 10.2_
 
-- [ ] 10. Checkpoint — Group B verification
+- [x] 10. Checkpoint — Group B verification
   - Run all new tests: `npx nx run cli:test --watch=false`.
   - Run e2e bin tests for the three commands above.
   - Confirm `mutates --help` lists `open`, `close`, `sessions`; lazy import map only loads what's invoked (spot-check by sampling `process.moduleLoadList` after `mutates open`).
