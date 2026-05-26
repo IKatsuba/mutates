@@ -68,6 +68,13 @@ function renderHandlerBody(c: Classified): string {
     case 'nodes':
       return `  return session.withActiveProject(() => {
     const declarations = resolveDeclarations(session, '${c.category}', p.target);
+    if (declarations.length === 0) {
+      throw new RpcError(
+        ErrorCode.NotFound,
+        '${c.coreName}: target matched zero ${c.category}',
+        { op: '${c.coreName}', target: p.target },
+      );
+    }
     const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
     const result = fn(declarations, p.data);
     return { ok: true, result };
@@ -75,6 +82,13 @@ function renderHandlerBody(c: Classified): string {
     case 'declarations-editor':
       return `  return session.withActiveProject(() => {
     const declarations = resolveDeclarations(session, '${c.category}', p.target);
+    if (declarations.length === 0) {
+      throw new RpcError(
+        ErrorCode.NotFound,
+        '${c.coreName}: target matched zero ${c.category}',
+        { op: '${c.coreName}', target: p.target },
+      );
+    }
     const overrides = (p.data ?? {}) as Record<string, unknown>;
     const editor = (structure: Record<string, unknown>) => ({ ...structure, ...overrides });
     const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;

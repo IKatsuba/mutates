@@ -21,6 +21,10 @@ const list = defineCommand({
       description: 'List every live daemon across all roots (reads the lockfile dir directly)',
       default: false,
     },
+    session: {
+      type: 'string',
+      description: 'Restrict the listing to one session id (validated against the daemon)',
+    },
     json: {
       type: 'boolean',
       description: 'Print as JSON',
@@ -52,10 +56,15 @@ const list = defineCommand({
 
     const root = resolve(args.root ?? process.cwd());
     try {
-      const conn = await connectClient({ root });
+      // Passing `sessionId` makes `connectClient` validate that the id
+      // is actually live on the daemon, raising SESSION_NOT_FOUND when
+      // it isn't. Without this the command would silently filter to an
+      // empty list and exit 0 — masking the agent's mistake.
+      const conn = await connectClient({ root, sessionId: args.session });
       try {
-        const result = await conn.call('session.list', {});
-        renderResult(result, args.json ? 'json' : 'text');
+        const result = await conn.call<Array<{ id: string }>>('session.list', {});
+        const filtered = args.session ? result.filter((s) => s.id === args.session) : result;
+        renderResult(filtered, args.json ? 'json' : 'text');
       } finally {
         await conn.close();
       }

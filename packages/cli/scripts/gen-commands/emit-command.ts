@@ -22,6 +22,7 @@ import { resolve } from 'node:path';
 
 import { exitCodeFor, renderError, renderResult } from '../../../client/output';
 import { connectClient } from '../../../client/rpc-client';
+import { resolveSessionId } from '../../../client/resolve-session';
 import { RpcError } from '../../../proto/jsonrpc';
 
 export default defineCommand({
@@ -42,7 +43,7 @@ export default defineCommand({
     try {
       const conn = await connectClient({ root, sessionId: args.session });
       try {
-        const sessionId = args.session ?? (await openSession(conn, root));
+        const sessionId = await resolveSessionId(conn, root, args.session);
         const data = await readJsonArg(args.json);
         const filter = args.filter ? (JSON.parse(args.filter) as Record<string, unknown>) : undefined;
         const target: Record<string, unknown> = {};
@@ -65,14 +66,6 @@ export default defineCommand({
     }
   },
 });
-
-async function openSession(
-  conn: { call: <R>(method: string, params?: unknown) => Promise<R> },
-  root: string,
-): Promise<string> {
-  const opened = await conn.call<{ sessionId: string }>('session.open', { root });
-  return opened.sessionId;
-}
 
 async function readJsonArg(raw: string | undefined): Promise<unknown> {
   if (raw === undefined) return undefined;

@@ -1,3 +1,4 @@
+import { unlinkSync } from 'node:fs';
 import { createServer, type Server, type Socket } from 'node:net';
 import { resolve as resolvePath } from 'node:path';
 
@@ -11,6 +12,13 @@ export interface DaemonArgs {
   root: string;
   sock: string;
   idleTimeoutMs?: number;
+  /**
+   * If `true`, a `daemon.shutdown` RPC causes the daemon to call
+   * `process.exit(0)` after the response is flushed. Defaults to
+   * `false` so in-process tests that drive the daemon directly do not
+   * kill the test runner.
+   */
+  exitOnShutdownRequest?: boolean;
 }
 
 /** Parse argv (positionals stripped) into the daemon's run args. */
@@ -59,16 +67,20 @@ export async function startDaemon(args: DaemonArgs): Promise<DaemonHandle> {
       void shutdown();
     },
   });
-  const dispatcher = new Dispatcher({ manager });
+  // Reference assigned later so `onShutdownRequest` can reach `shutdown`
+  // even though `shutdown` is declared further down.
+  const shutdownRef: { fn: (() => Promise<void>) | null } = { fn: null };
+  const dispatcher = new Dispatcher({
+    manager,
+    onShutdownRequest: () => {
+      void shutdownRef.fn?.().then(() => {
+        if (args.exitOnShutdownRequest) process.exit(0);
+      });
+    },
+  });
   const server = createServer((socket) => attachConnection(socket, codec, dispatcher));
 
-  await new Promise<void>((resolveListen, rejectListen) => {
-    server.once('error', rejectListen);
-    server.listen(args.sock, () => {
-      server.off('error', rejectListen);
-      resolveListen();
-    });
-  });
+  await listenWithStaleSocketRecovery(server, args.sock);
 
   // Write the lockfile only after the server is listening so a client
   // that races our spawn never sees a path it cannot connect to.
@@ -99,6 +111,7 @@ export async function startDaemon(args: DaemonArgs): Promise<DaemonHandle> {
     if (lockfileWritten) unlinkLockfile(args.root);
     await closeServer(server);
   };
+  shutdownRef.fn = shutdown;
 
   return { server, manager, dispatcher, shutdown };
 }
@@ -109,7 +122,7 @@ export async function startDaemon(args: DaemonArgs): Promise<DaemonHandle> {
  */
 export async function main(argv = process.argv.slice(2)): Promise<void> {
   const args = parseArgs(argv);
-  const handle = await startDaemon(args);
+  const handle = await startDaemon({ ...args, exitOnShutdownRequest: true });
 
   for (const sig of ['SIGINT', 'SIGTERM'] as const) {
     process.on(sig, () => {
@@ -157,6 +170,41 @@ export function attachConnection(socket: Socket, codec: NdjsonCodec, dispatcher:
 function closeServer(server: Server): Promise<void> {
   return new Promise((res) => {
     server.close(() => res());
+  });
+}
+
+/**
+ * Bind `server` to `sock`. If the socket path already exists from a
+ * crashed previous daemon, unlink it and retry once. Windows named
+ * pipes do not need this dance.
+ */
+function listenWithStaleSocketRecovery(server: Server, sock: string): Promise<void> {
+  return new Promise<void>((resolveListen, rejectListen) => {
+    const onceErr = (err: NodeJS.ErrnoException): void => {
+      if (err.code === 'EADDRINUSE' && process.platform !== 'win32') {
+        try {
+          unlinkSync(sock);
+        } catch (unlinkErr) {
+          const code = (unlinkErr as NodeJS.ErrnoException).code;
+          if (code !== 'ENOENT') {
+            rejectListen(unlinkErr);
+            return;
+          }
+        }
+        server.once('error', rejectListen);
+        server.listen(sock, () => {
+          server.off('error', rejectListen);
+          resolveListen();
+        });
+        return;
+      }
+      rejectListen(err);
+    };
+    server.once('error', onceErr);
+    server.listen(sock, () => {
+      server.off('error', onceErr);
+      resolveListen();
+    });
   });
 }
 

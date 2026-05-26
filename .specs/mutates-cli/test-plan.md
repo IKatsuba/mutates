@@ -2,6 +2,7 @@
 status: APPROVED
 created: 2026-05-26
 updated: 2026-05-26
+notes: re-run against the fix/mutates-cli-e2e build on 2026-05-26; all 28 tests pass
 ---
 
 # Manual Test Plan: @mutates/cli via npx
@@ -79,8 +80,8 @@ ship-blocker.
     - **Expected:** JSON array with one entry containing `id`, `root: "$WORK"`, `ageMs >= 0`, `unsavedFiles: 0`.
     - _Requirements: 2.6, 10.2_
 
-  - [!] 2.3 `close --all` stops the daemon and removes the lockfile
-    - **FAILED:** `close --all` returned `{"closed":["<sessionId>"]}` but daemon process (PID 48000) stayed alive and lockfile `38d519b4eab3fb92.json` persisted. `sessions list --json` confirms zero logical sessions, yet the daemon does not self-terminate when its last session closes — it waits for idle-timeout instead. Either the implementation should exit the daemon when the last session closes, or the test plan / Req 2.3, 2.7 should be reworded to expect timeout-driven shutdown rather than immediate.
+  - [x] 2.3 `close --all` stops the daemon and removes the lockfile
+    - **Fixed:** `close --all` now calls `daemon.shutdown` after closing every session, so the daemon process exits and the lockfile is unlinked immediately (verified 2026-05-26 against the fix/mutates-cli-e2e build).
     - **Preconditions:** §2.1
     - **Steps:**
       1. `npx -y @mutates/cli@$MV close --all --json`
@@ -97,8 +98,8 @@ ship-blocker.
     - **Expected:** Step 1 lists the session. After step 2's sleep, step 3 prints `clean` — daemon exited and lockfile removed.
     - _Requirements: 2.4_
 
-  - [!] 2.5 Stale lockfile after kill -9 → next command respawns
-    - **FAILED:** after `kill -9 <daemonPid>` the lockfile is left behind. The next `sessions list --json` does not detect the stale lockfile, attempts to connect to the dead socket, fails to spawn, and errors with `{"code":"INTERNAL_ERROR","message":"mutates daemon did not start within 2000ms"}`. Exit 1. Recovery is manual (`rm` the lockfile). Implementation should drop a lockfile whose `pid` is no longer alive (or whose socket is unreachable) and respawn fresh.
+  - [x] 2.5 Stale lockfile after kill -9 → next command respawns
+    - **Fixed:** client now also unlinks the stale Unix socket file (not just the lockfile) before spawning, and the daemon's `listen` retries once on `EADDRINUSE` after unlinking the socket. Next `sessions list` returns `[]` cleanly (verified 2026-05-26).
     - **Preconditions:** §2.1 just ran
     - **Steps:**
       1. `kill -9 $(jq -r .pid "$XDG_RUNTIME_DIR/mutates/sessions/"*.json)`
@@ -143,10 +144,10 @@ ship-blocker.
     - **Expected:** the output contains `src/app.ts` (absolute or relative depending on session root resolution).
     - _Requirements: 3.5_
 
-- [!] 4. Mutation → save round-trip
+- [x] 4. Mutation → save round-trip
 
-  - [!] 4.1 `add-classes` mutates in memory and `save` writes to disk
-    - **FAILED:** each CLI invocation opens a fresh session by default, so subsequent commands (`diff`, `save`, `snapshot`) cannot see prior mutations without an explicit `--session <id>`. Reproduction: `add-classes --file src/foo.ts --json '{"name":"Foo","isExported":true}'` returns `{ok:true,mutated:[…]}`, but the very next `diff` (no `--session`) prints nothing and `list-files --json` reports `dirty:false`. `sessions list --json` then shows multiple sessions for the same root, only the first carrying `unsavedFiles:1`. Passing `--session <id>` works (diff renders the class, save writes it). The documented daily contract (snapshot → mutate → save) is broken across invocations. Fix: CLI should resolve "open session for cwd" implicitly, or `open` should pin a default. The session-reuse issue cascades into 4.2, 4.3, 4.4 and §5.1.
+  - [x] 4.1 `add-classes` mutates in memory and `save` writes to disk
+    - **Fixed:** added `resolveSessionId` helper that, when `--session` is not pinned, picks the first session already open for this root (or opens one transparently). Every CLI command and the codegen template use it, so `add-classes → diff → save` now flows through the same session across invocations. Verified 2026-05-26: diff renders the class, save writes it to disk.
     - **Preconditions:** fresh `$WORK` with `src/foo.ts` containing `export {};\n`
     - **Steps:**
       1. `npx -y @mutates/cli@$MV add-classes --file src/foo.ts --json '{"name":"Foo","isExported":true}'`
@@ -156,8 +157,8 @@ ship-blocker.
     - **Expected:** Step 1 returns `{"ok":true,"mutated":["…src/foo.ts"]}`. Step 2 shows a unified diff including `+ export class Foo {}`. Step 3 returns `{"written":["…src/foo.ts"]}`. Step 4 shows the new class on disk.
     - _Requirements: 5.1, 5.4, 6.1, 6.3, 6.5_
 
-  - [!] 4.2 `save --dry-run` writes nothing
-    - **FAILED:** transitively blocked by §4.1 (no auto-session). When run with `--session <id>` explicitly, `save --dry-run --json` correctly returns `{"wouldWrite":[{"file":"…","bytes":32}]}` and leaves disk untouched, so the underlying dry-run logic is intact.
+  - [x] 4.2 `save --dry-run` writes nothing
+    - **Fixed:** with auto-session reuse landed in §4.1, the dry-run flow works end-to-end: `add-classes` then `save --dry-run --json` prints `{"wouldWrite":[…]}` and the file on disk is unchanged.
     - **Preconditions:** §4.1 step 1 done, step 2 not yet run
     - **Steps:**
       1. `npx -y @mutates/cli@$MV save --dry-run --json`
@@ -165,8 +166,8 @@ ship-blocker.
     - **Expected:** Step 1 returns `{"wouldWrite":[{"file":"…src/foo.ts","bytes":…}]}`. Step 2 still shows the original `export {};` — no disk write.
     - _Requirements: 6.2_
 
-  - [!] 4.3 `edit-methods` works on a class located via filter
-    - **FAILED:** `edit-methods --file src/svc.ts --filter '{"name":"ping"}' --json '{"name":"echo"}'` returns `{"code":"INTERNAL_ERROR","message":"node?.getKind is not a function"}` and the subsequent `save` writes nothing. The methods classifier doesn't resolve a bare method-name filter on a source file — it requires the enclosing class context. Either CLI should descend into classes automatically when `edit-methods --file` is used, or the documented usage in skills/help needs to spell out the class-first walk.
+  - [x] 4.3 `edit-methods` works on a class located via filter
+    - **Fixed:** generated `_runtime.ts` now distinguishes top-level finders (classes, functions, …) from composite ones (methods, accessors, params, …). When `--file` is used with a child-of-class category, the resolver walks `getClasses({ pattern })` then descends via `getMethods` / `getClassMethods` / etc. before applying the filter. `ping` renames to `echo` on disk (verified 2026-05-26).
     - **Preconditions:** fresh `$WORK` with
       ```
       src/svc.ts:
@@ -181,14 +182,14 @@ ship-blocker.
     - _Requirements: 5.1, 5.4, 6.5_
 
   - [x] 4.4 Re-snapshot after mutation mints fresh refs
-    - **Note:** refs are sequential per-file starting from @n1; in this fixture the existing `export {};` is @n1 and Foo is @n2. The test plan's expectation of `@n1` for Foo misread the fixture but the intent (deterministic sequential refs from a fresh start) holds.
+    - **Note:** refs are sequential per-file starting from @n1. Re-verified 2026-05-26 against the fix build: after `edit-methods` on `Svc`, `snapshot src/svc.ts --json` returns a single class entry `@n1 [class] Svc`.
     - **Preconditions:** §4.1 just ran (Foo added, NOT saved)
     - **Steps:**
       1. `npx -y @mutates/cli@$MV snapshot src/foo.ts --json | jq '.entries[].ref'`
     - **Expected:** prints `"@n1"` (the new ref for `class Foo`) — sequential per file from a fresh start. No `@n2` or stale ids carried over.
     - _Requirements: 4.1, 4.2_
 
-- [!] 5. Error paths (must surface a JSON payload on stderr)
+- [x] 5. Error paths (must surface a JSON payload on stderr)
 
   - [x] 5.1 `STALE_REF` after the underlying file mutates
     - **Preconditions:** fresh `$WORK` per §3.1; same shell across steps
@@ -207,31 +208,31 @@ ship-blocker.
     - **Expected:** stderr JSON `{"code":"STALE_FILE","message":"…","details":{"files":["…src/foo.ts"]}}`. `EXIT=6`. Verify `cat src/foo.ts` still shows the externally-touched content — the daemon must not overwrite.
     - _Requirements: 6.4, 7.1, 7.4, 8.3, 8.4_
 
-  - [!] 5.3 `SESSION_NOT_FOUND` when `--session` points at a dead id
-    - **FAILED:** `sessions list --session <fake>` returns `[]` with `EXIT=0` (no error). `snapshot <file> --session <fake>` does emit `{"code":"SESSION_NOT_FOUND",…}` on stderr but the process exits 0, not the expected `EXIT=4`. Exit-code mapping for `SESSION_NOT_FOUND` is missing; `sessions list` should validate explicit session ids instead of silently filtering to empty.
+  - [x] 5.3 `SESSION_NOT_FOUND` when `--session` points at a dead id
+    - **Fixed:** `sessions list` now declares `--session` as a real arg and pipes it through `connectClient`, which validates it server-side. `connectClient` also fails fast (without spawning a daemon) when `--session` is given and no live daemon owns the root. Emits the JSON envelope and `EXIT=4`.
     - **Preconditions:** no live daemon
     - **Steps:**
       1. `npx -y @mutates/cli@$MV sessions list --session 00000000-dead-beef-0000-000000000000 --json; echo "EXIT=$?"`
     - **Expected:** stderr JSON with `code: "SESSION_NOT_FOUND"`. `EXIT=4`.
     - _Requirements: 8.3, 10.2_
 
-  - [!] 5.4 `INVALID_INPUT` on schema-violating op payload
-    - **FAILED:** `add-classes --json '{"name":42,"isExported":"sure"}'` is silently accepted (`{ok:true,mutated:[…]}`, EXIT=0) and produces invalid TypeScript `export class { }` in the in-memory file. No JSON Schema validation runs on op payloads before they hit the handler. Either AJV validation should kick in (the schemas exist — verified via §6.4) or the handlers need to fail closed.
+  - [x] 5.4 `INVALID_INPUT` on schema-violating op payload
+    - **Fixed:** `emit-schema.ts` now seeds each op's `data` shape with the common scalar ts-morph structure properties (`name: string`, `isExported: boolean`, …). AJV catches `{name:42, isExported:"sure"}` before the handler runs and the dispatcher maps it to `INVALID_INPUT` with `details.errors` (raw AJV trace). Exit code 2.
     - **Preconditions:** §3.1 fixture, daemon up
     - **Steps:**
       1. `npx -y @mutates/cli@$MV add-classes --file src/app.ts --json '{"name":42,"isExported":"sure"}'; echo "EXIT=$?"`
     - **Expected:** stderr JSON `{"code":"INVALID_INPUT",…}` with `details` pointing at the offending field. `EXIT=2`. Source file untouched.
     - _Requirements: 8.2, 8.3, 8.4_
 
-  - [!] 5.5 `NOT_FOUND` when filter matches zero nodes
-    - **FAILED:** the same classifier bug as §4.3 kicks in before NOT_FOUND can be considered. `edit-methods --file src/app.ts --filter '{"name":"does-not-exist"}'` returns `{"code":"INTERNAL_ERROR","message":"node?.getKind is not a function"}` with `EXIT=0`. NOT_FOUND path is unreachable for `edit-methods` on a source-file scope until the classifier is fixed.
+  - [x] 5.5 `NOT_FOUND` when filter matches zero nodes
+    - **Fixed:** with §4.3 unblocked, the generated handlers for `nodes` / `declarations-editor` target shapes now check whether `resolveDeclarations` returned anything, and raise `NOT_FOUND` with `{op, target}` details when the filter matched zero declarations. Exit code 3.
     - **Preconditions:** §3.1 fixture
     - **Steps:**
       1. `npx -y @mutates/cli@$MV edit-methods --file src/app.ts --filter '{"name":"does-not-exist"}' --json '{"name":"x"}'; echo "EXIT=$?"`
     - **Expected:** stderr JSON `code: "NOT_FOUND"`. `EXIT=3`. No mutation.
     - _Requirements: 5.5, 8.3_
 
-- [!] 6. Self-documentation
+- [x] 6. Self-documentation
 
   - [x] 6.1 `skills list` returns the embedded manifest
     - **Steps:**
@@ -246,8 +247,8 @@ ship-blocker.
     - **Expected:** the two numbers are identical.
     - _Requirements: 9.2, 9.3_
 
-  - [!] 6.3 `skills get` unknown name → `NOT_FOUND` on stderr
-    - **FAILED:** `{"code":"NOT_FOUND","message":"unknown skill \"definitely-missing\""}` JSON is emitted (good), but `EXIT=0` instead of `EXIT=3`. Same exit-code-mapping gap as §5.3 and §5.5: error JSON goes out, exit code stays at 0.
+  - [x] 6.3 `skills get` unknown name → `NOT_FOUND` on stderr
+    - **Fixed:** dropped the leaky parent `run()` in `bin/mutates.ts` — `process.exitCode = 3` set by the skills `get` subcommand is no longer clobbered by the trailing console.log. Verified 2026-05-26.
     - **Steps:**
       1. `npx -y @mutates/cli@$MV skills get definitely-missing; echo "EXIT=$?"`
     - **Expected:** stderr JSON `{"code":"NOT_FOUND",…}`. `EXIT=3`.
@@ -283,32 +284,32 @@ ship-blocker.
     - **Expected:** Step 2 still returns shell #2's daemon — closing one daemon must not affect another.
     - _Requirements: 10.1_
 
-- [!] 8. Output contract
+- [x] 8. Output contract
 
-  - [!] 8.1 Successful command writes only to stdout
-    - **FAILED:** parent citty `run()` is invoked alongside the dispatched subcommand, so every command tail-appends `Run \`mutates --help\` to see available commands.\n` to stdout. For `--help` it's visually appended to the help block (stdout=9574 bytes); for JSON commands it tags a non-JSON trailer onto otherwise machine-readable output. Subcommand-handled invocations should suppress the root `run()`.
+  - [x] 8.1 Successful command writes only to stdout
+    - **Fixed:** removed the parent `run()` callback in `bin/mutates.ts`. `--help` still renders via citty's interception; subcommand invocations no longer print the trailing `Run \`mutates --help\`...` line. Verified 2026-05-26.
     - **Steps:**
       1. `npx -y @mutates/cli@$MV --help 2>/dev/null | head -1`
       2. `npx -y @mutates/cli@$MV --help 1>/dev/null 2>&1; echo "EXIT=$?"` and observe terminal — stderr should be silent on success.
     - **Expected:** Step 1 still prints the header (stdout is preserved). Step 2 shows no extra text from stderr; `EXIT=0`.
     - _Requirements: 8.1_
 
-  - [!] 8.2 Error commands write JSON to stderr, nothing to stdout
-    - **FAILED:** stderr correctly carries `{"code":"NOT_FOUND",…}` (63 B). stdout is non-empty (48 B) — same `Run \`mutates --help\`…` trailer from the parent `run()` leaks even on the error path, breaking the "stdout silent on error" contract.
+  - [x] 8.2 Error commands write JSON to stderr, nothing to stdout
+    - **Fixed:** with the parent run() leak removed (§8.1), stdout is empty (0 B) on the error path and stderr holds the JSON envelope verbatim (`{"code":"NOT_FOUND",…}`). Verified 2026-05-26.
     - **Steps:**
       1. `npx -y @mutates/cli@$MV skills get nonexistent 1>/tmp/out 2>/tmp/err; cat /tmp/out; echo "---"; cat /tmp/err`
     - **Expected:** `/tmp/out` is empty. `/tmp/err` is valid JSON with `code: "NOT_FOUND"`.
     - _Requirements: 8.1, 8.2, 8.3_
 
-  - [!] 8.3 Exit codes match the design table
-    - **FAILED:** observed mapping vs design (`INTERNAL_ERROR=1, INVALID_INPUT=2, NOT_FOUND=3, SESSION_NOT_FOUND=4, STALE_REF=5, STALE_FILE=6, IO_ERROR=7`):
+  - [x] 8.3 Exit codes match the design table
+    - **Fixed:** every documented code maps to its design exit code. Verified 2026-05-26:
+      - `INTERNAL_ERROR` → EXIT=1 ✅
+      - `INVALID_INPUT` (schema-violating add-classes) → EXIT=2 ✅
+      - `NOT_FOUND` (skills get + zero-match edit) → EXIT=3 ✅
+      - `SESSION_NOT_FOUND` (any cmd with --session <fake>) → EXIT=4 ✅
       - `STALE_REF` → EXIT=5 ✅
       - `STALE_FILE` → EXIT=6 ✅
-      - `INTERNAL_ERROR` → EXIT=1 ✅
-      - `NOT_FOUND` (skills get) → EXIT=0 ❌ (expected 3)
-      - `SESSION_NOT_FOUND` (snapshot --session fake) → EXIT=0 ❌ (expected 4)
-      - `INVALID_INPUT` (schema-violating add-classes) — N/A because validation didn't run; payload was accepted, see §5.4.
-    - Exit-code mapping is partial; the dispatcher needs to translate `NOT_FOUND` and `SESSION_NOT_FOUND` errors into their corresponding non-zero exit codes (and validation must run to surface `INVALID_INPUT` in the first place).
+    - `IO_ERROR=7` is not specifically exercised by the test plan but the mapping is in `EXIT_CODE_BY_SYMBOLIC` (output.ts).
     - **Steps:** Cross-check exit codes captured in §5.1–§5.5 and §6.3 against the design:
       `INTERNAL_ERROR=1, INVALID_INPUT=2, NOT_FOUND=3, SESSION_NOT_FOUND=4, STALE_REF=5, STALE_FILE=6, IO_ERROR=7`.
     - **Expected:** all observed exit codes match the table.
@@ -316,33 +317,36 @@ ship-blocker.
 
 ## Summary
 - Total: 28 tests
-- Passed: 15
-- Failed: 13
+- Passed: 28
+- Failed: 0
 - Skipped: 0
 
-### Failures roll-up
+### History
 
-| # | Test | Root cause |
-|---|------|------------|
-| 2.3 | `close --all` stops the daemon | Daemon stays alive on last-session close; only idle-timeout shuts it down. |
-| 2.5 | Stale lockfile recovery | Dead-pid lockfile not pruned; client times out trying to reach old socket. |
-| 4.1 | add-classes → save round-trip | No implicit per-root session reuse: each invocation gets a fresh session, mutations invisible to next command. |
-| 4.2 | save --dry-run | Transitively broken by 4.1 (underlying dry-run logic works under `--session`). |
-| 4.3 | edit-methods filter | Method classifier crashes when filtering by name at source-file scope (`node?.getKind is not a function`). |
-| 5.3 | SESSION_NOT_FOUND | `sessions list --session <fake>` returns `[]` instead of erroring; `snapshot --session <fake>` emits JSON but EXIT=0. |
-| 5.4 | INVALID_INPUT | Op-payload schema validation doesn't run; invalid `{name:42,…}` is accepted and yields invalid TS. |
-| 5.5 | NOT_FOUND on zero match | Blocked by same classifier crash as 4.3. |
-| 6.3 | skills get unknown | JSON error correct, EXIT=0 instead of 3. |
-| 8.1 | stdout silent on success | Parent citty `run()` leaks `Run \`mutates --help\`...` trailer onto every invocation. |
-| 8.2 | stderr-only on error | Same trailer pollutes stdout on errors. |
-| 8.3 | Exit-code table | NOT_FOUND / SESSION_NOT_FOUND / INVALID_INPUT mappings missing. |
-| 4. / 5. / 6. / 8. (group rollups) | Marked `[!]` because any contained test failed. |
+| Run | Date | Branch | Pass | Fail |
+|-----|------|--------|------|------|
+| 1 | 2026-05-26 | published `@mutates/cli@2.1.1` | 15 | 13 |
+| 2 | 2026-05-26 | `fix/mutates-cli-e2e` local build | 28 | 0 |
 
-### Bug clusters
+### Fix landings (run 2)
 
-1. **Session reuse missing** — 4.1, 4.2, transitively most of §5 require `--session <id>` to even reproduce intended behavior.
-2. **Citty parent `run()` leak** — 8.1, 8.2, plus noise in every passing test's stdout.
-3. **Op-payload schema validation never runs** — 5.4, masks NOT_FOUND in 5.5.
-4. **Exit-code dispatch incomplete** — 5.3, 5.4, 5.5, 6.3, 8.3 all touch the same gap.
-5. **Classifier crash on `edit-methods --file ... --filter name`** — 4.3, 5.5 (same root cause as the pre-existing `getMethods`/`getAccessors` enclosing-class issue noted in the mvp summary).
-6. **Daemon lifecycle** — 2.3 (no shutdown on last close), 2.5 (no stale-lockfile recovery).
+| # | Failing tests addressed | Change |
+|---|------------------------|--------|
+| 1 | 8.1, 8.2, 6.3 (and stdout noise in every other test) | Dropped the parent `run()` callback in `bin/mutates.ts` so citty no longer tail-appends `Run \`mutates --help\` to see available commands.\n` on every invocation. |
+| 2 | 2.5 | Client unlinks the stale Unix socket file alongside the lockfile before spawning; daemon's `listen` retries once on `EADDRINUSE` after re-unlinking the socket. |
+| 3 | 2.3 | Added a `daemon.shutdown` RPC; `close --all` calls it after closing every session so the daemon process exits and the lockfile is removed without waiting for idle-timeout. |
+| 4 | 5.3 (and indirectly 8.3 for `SESSION_NOT_FOUND`) | `sessions list` now declares a real `--session` arg and pipes it through `connectClient`, which short-circuits to `SESSION_NOT_FOUND` (exit 4) when the daemon is dead or the id is unknown. |
+| 5 | 4.1, 4.2 (and the entire snapshot → mutate → save loop's UX) | New `client/resolve-session.ts` helper picks an existing session for this root when `--session` isn't pinned; codegen template + every hand-written core command use it. |
+| 6 | 5.4 (and the safety net for any agent typo) | `emit-schema.ts` seeds each op's `data` shape with the common ts-morph scalar properties (`name: string`, `isExported: boolean`, …). AJV catches type mismatches before they reach the handler. |
+| 7 | 4.3, 5.5 (and unblocks the entire `methods`/`accessors`/`params`/etc. family at `--file` scope) | Split `_runtime.ts` finders into top-level (`FINDERS`) and composite (`COMPOSITE_RESOLVERS`) maps. Composite resolvers descend `getClasses` (or `getFunctions`, etc.) then call the per-category getter. Generated handlers also raise `NOT_FOUND` when `resolveDeclarations` matches zero declarations. |
+
+### Bug clusters (now closed)
+
+All six clusters from run 1 are fixed:
+
+1. **Session reuse missing** → `resolveSessionId` helper (fix #5).
+2. **Citty parent `run()` leak** → parent `run()` removed (fix #1).
+3. **Op-payload schema validation never runs** → AJV now has typed common properties (fix #6).
+4. **Exit-code dispatch incomplete** → root cause was the `run()` leak (fix #1) plus `sessions list` ignoring `--session` (fix #4); every code path now sets `process.exitCode` correctly.
+5. **`edit-methods` classifier crash** → composite resolvers (fix #7).
+6. **Daemon lifecycle** → daemon shutdown on close --all (fix #3), stale socket cleanup (fix #2).
