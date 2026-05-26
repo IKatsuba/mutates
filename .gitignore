@@ -46,3 +46,5 @@ Thumbs.db
 out
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
+
+.claude/scheduled_tasks.lock
