@@ -20,6 +20,7 @@ export const main = defineCommand({
     save: () => import('../src/commands/core/save').then((m) => m.default),
     reload: () => import('../src/commands/core/reload').then((m) => m.default),
     'list-files': () => import('../src/commands/core/list-files').then((m) => m.default),
+    schema: () => import('../src/commands/core/schema').then((m) => m.default),
     ...GENERATED_COMMANDS,
   },
   run() {

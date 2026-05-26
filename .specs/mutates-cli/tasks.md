@@ -225,7 +225,7 @@ commands work.
   - E2E test: `mutates add-classes --file 'src/**/*.ts' --json '{"name":"Foo","isExported":true}'` against a tmpdir fixture; assert the file contains `class Foo`.
   - _Requirements: 1.1, 5.1, 5.4_
 
-- [ ] 23. Hand-written `schema` command
+- [x] 23. Hand-written `schema` command
   - `src/commands/core/schema.ts`: args `{ op?: string, json?: boolean }`. With no `op`, returns the manifest of `{ op, category, verb, schema: <JSON Schema> }` for every generated op. With `op`, returns just that op's schema. Reads from the generated `op-schemas.ts`.
   - Wire into `bin/mutates.ts`.
   - Unit test verifies the JSON output for at least one op matches the expected JSON Schema shape (Draft 2020-12 minimum: `type`, `properties`, `required`).
