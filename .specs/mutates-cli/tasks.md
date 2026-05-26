@@ -142,7 +142,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Unit tests `ref-table.spec.ts`: mint → resolve happy path; invalidateFile → resolve throws StaleRef; resetFile mints fresh sequence; `node.wasForgotten()` → StaleRef. Use `ts-morph` `InMemoryFileSystemHost` to build a tiny test project.
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 12. FileStatCache with xxhash fallback
+- [x] 12. FileStatCache with xxhash fallback
   - Create `packages/cli/src/session/file-stat-cache.ts` per design: `record(file, fp)`, `verify(file, inMemoryText): Promise<{ok}|{ok:false, reason:'StaleFile'}>`. On mtime+size mismatch, compute `xxhash64` of disk content; compare to cached hash (or to `xxhash64(inMemoryText)` if no cached hash yet). On match, silently refresh the fingerprint.
   - Add `xxhash-wasm` to package.json dependencies; lazy-init the hasher (top-level await is fine in the daemon ESM entry — or use the sync `XXH64` factory).
   - Unit tests `file-stat-cache.spec.ts`: ok when stat matches; ok when stat mismatches but content matches (simulate `touch`); StaleFile when both diverge; verify the fingerprint is refreshed on a forgive-by-hash hit.
