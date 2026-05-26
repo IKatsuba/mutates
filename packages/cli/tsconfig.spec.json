@@ -14,6 +14,8 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "bin/**/*.spec.ts",
+    "scripts/**/*.spec.ts",
+    "scripts/**/*.ts",
     "src/**/*.d.ts"
   ]
 }

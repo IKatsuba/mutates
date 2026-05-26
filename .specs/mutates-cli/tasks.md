@@ -200,7 +200,7 @@ get*` function, and emits daemon handlers, citty subcommands, and JSON
 schemas. After this group, `mutates add-classes ...` and ~55 sibling
 commands work.
 
-- [ ] 19. Classifier + emitter library
+- [x] 19. Classifier + emitter library
   - Create `packages/cli/scripts/gen-commands/classifier.ts`: opens a `Project` pointing at `packages/core/src/index.ts`, walks named exports, filters by name pattern (`/^(add|edit|remove|get)[A-Z]/`), inspects each function's first two parameter types, and returns a `Classified` record: `{ verb, category, coreName, targetShape: 'pattern' | 'nodes' | 'query' | 'declarations-editor', dataType?: TypeNode }`.
   - Create `gen-commands/emit-handler.ts`, `emit-command.ts`, `emit-schema.ts` — pure functions that take a `Classified` and return source strings. Use template strings with `JSON.stringify` for any embedded data.
   - Unit tests `gen-commands/classifier.spec.ts` and `emit-*.spec.ts`: fixed input → snapshot output; cover every `targetShape`.

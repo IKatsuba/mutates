@@ -12,7 +12,11 @@ export default defineConfig({
     globals: true,
     cache: { dir: '../../node_modules/.vitest/packages/cli' },
     environment: 'node',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}', 'bin/**/*.{test,spec}.ts'],
+    include: [
+      'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'bin/**/*.{test,spec}.ts',
+      'scripts/**/*.{test,spec}.ts',
+    ],
     reporters: ['default'],
     coverage: {
       reportsDirectory: '../../coverage/packages/cli',
