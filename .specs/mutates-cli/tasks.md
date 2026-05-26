@@ -148,7 +148,7 @@ so `save` is a no-op-write unless a future generated `op` mutates.
   - Unit tests `file-stat-cache.spec.ts`: ok when stat matches; ok when stat mismatches but content matches (simulate `touch`); StaleFile when both diverge; verify the fingerprint is refreshed on a forgive-by-hash hit.
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 13. Session class + `withActiveProject` bridge
+- [x] 13. Session class + `withActiveProject` bridge
   - Create `packages/cli/src/session/session.ts` implementing `Session` per design. Constructor loads the project — if `<root>/tsconfig.json` exists, pass `tsConfigFilePath`; otherwise create a project with default options and lazy-load source files via `addSourceFilesAtPaths`. Records initial stat for every loaded source file.
   - Implement `withActiveProject<T>(fn: () => T): T` that calls `setActiveProject(this.project)` (the export added in Group A), runs `fn`, and restores the previous via the returned value.
   - Implement `dirtyFiles(): string[]` (iterates `project.getSourceFiles()`, returns those whose in-memory text differs from `stats.recorded[file].text`, recorded at load/save).
