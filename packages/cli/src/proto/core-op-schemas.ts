@@ -23,7 +23,11 @@ function obj(
     type: 'object',
     properties,
     required,
-    additionalProperties: true,
+    // Core ops have a closed param surface — agents passing unknown
+    // keys are almost certainly making a mistake. Free-form sub-objects
+    // (e.g. `find`'s `query`) opt back in to additionalProperties:true
+    // on their own schema.
+    additionalProperties: false,
   };
 }
 

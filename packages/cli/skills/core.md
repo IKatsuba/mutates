@@ -124,7 +124,7 @@ file-stat cache. Sessions are keyed by the absolute project root.
   to point at the project that actually lists source files. When no
   tsconfig is found at all, the session falls back to globbing
   `**/*.{ts,tsx}` under the root, excluding `node_modules`, `dist`,
-  `.git`, `tmp`, `coverage`.
+  `build`, `out`, `.next`, `.nx`, `.git`, `tmp`, `coverage`.
 - **Idle timeout.** Each session has an idle timeout, defaulting to
   **600 seconds** since the last RPC. The timeout is overridable
   via the `MUTATES_IDLE_TIMEOUT` environment variable (read by the

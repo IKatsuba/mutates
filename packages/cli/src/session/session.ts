@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
-import { isAbsolute, join, resolve as resolvePath } from 'node:path';
+import { join, resolve as resolvePath } from 'node:path';
 
-import { Project, resetActiveProject, setActiveProject, type SourceFile } from '@mutates/core';
+import { Project, resetActiveProject, setActiveProject, ts, type SourceFile } from '@mutates/core';
 
 import { ErrorCode } from '../proto/error-codes';
 import { RpcError } from '../proto/jsonrpc';
@@ -13,10 +13,11 @@ export interface SessionOptions {
   /** Absolute or relative project root. */
   root: string;
   /**
-   * Optional path to a tsconfig (absolute or relative to `root`). When
-   * provided, overrides the default lookup of `<root>/tsconfig.json`.
-   * A solution-style tsconfig (empty `files`/`include` with non-empty
-   * `references`) is rejected — pass a leaf tsconfig instead.
+   * Optional absolute path to a tsconfig. When provided, overrides the
+   * default lookup of `<root>/tsconfig.json`. A solution-style tsconfig
+   * (empty `files`/`include` with non-empty `references`) is rejected —
+   * pass a leaf tsconfig instead. Callers (CLI / RPC) are expected to
+   * resolve any relative path before constructing a Session.
    */
   tsconfig?: string;
 }
@@ -51,15 +52,16 @@ export class Session {
     this.openedAt = Date.now();
 
     if (opts.tsconfig !== undefined) {
-      const resolved = isAbsolute(opts.tsconfig)
-        ? opts.tsconfig
-        : resolvePath(this.root, opts.tsconfig);
-      if (!existsSync(resolved)) {
-        throw new RpcError(ErrorCode.InvalidInput, `session: tsconfig not found: ${resolved}`, {
-          tsconfig: resolved,
-        });
+      if (!existsSync(opts.tsconfig)) {
+        throw new RpcError(
+          ErrorCode.InvalidInput,
+          `session: tsconfig not found: ${opts.tsconfig}`,
+          {
+            tsconfig: opts.tsconfig,
+          },
+        );
       }
-      this.tsconfig = resolved;
+      this.tsconfig = opts.tsconfig;
     } else {
       const candidate = join(this.root, 'tsconfig.json');
       this.tsconfig = existsSync(candidate) ? candidate : null;
@@ -88,6 +90,10 @@ export class Session {
         join(this.root, '**/*.{ts,tsx}'),
         `!${join(this.root, '**/node_modules/**')}`,
         `!${join(this.root, '**/dist/**')}`,
+        `!${join(this.root, '**/build/**')}`,
+        `!${join(this.root, '**/out/**')}`,
+        `!${join(this.root, '**/.next/**')}`,
+        `!${join(this.root, '**/.nx/**')}`,
         `!${join(this.root, '**/.git/**')}`,
         `!${join(this.root, '**/tmp/**')}`,
         `!${join(this.root, '**/coverage/**')}`,
@@ -168,12 +174,16 @@ export class Session {
  * itself (both `files` and `include` absent or empty) but lists project
  * `references`. Such configs delegate compilation to referenced
  * sub-projects and load 0 source files in ts-morph's default mode.
+ *
+ * Uses `ts.parseConfigFileTextToJson` so JSONC comments and trailing
+ * commas are handled the same way `tsc` would handle them.
  */
 function isSolutionStyle(tsconfigPath: string): boolean {
   try {
     const raw = readFileSync(tsconfigPath, 'utf8');
-    const stripped = stripJsonComments(raw);
-    const cfg = JSON.parse(stripped) as {
+    const parsed = ts.parseConfigFileTextToJson(tsconfigPath, raw);
+    if (parsed.error || !parsed.config) return false;
+    const cfg = parsed.config as {
       files?: unknown[];
       include?: unknown[];
       references?: unknown[];
@@ -185,14 +195,4 @@ function isSolutionStyle(tsconfigPath: string): boolean {
   } catch {
     return false;
   }
-}
-
-/**
- * Minimal JSON-with-comments stripper for tsconfig files. Handles
- * `//` line comments and `/* … *\/` blocks. Not robust against
- * comments-inside-strings, but tsconfigs in practice don't contain
- * those.
- */
-function stripJsonComments(input: string): string {
-  return input.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
 }

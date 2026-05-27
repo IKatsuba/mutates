@@ -5,14 +5,12 @@ import { Pattern } from '../utils';
 
 export function getSourceFiles(pattern?: Pattern): SourceFile[] {
   const project = getActiveProject();
-  let files: SourceFile[];
-  if (pattern === undefined) {
-    files = project.getSourceFiles();
-  } else if (typeof pattern === 'string') {
-    files = project.getSourceFiles(pattern);
-  } else {
-    files = project.getSourceFiles(pattern as readonly string[]);
-  }
+  const files =
+    pattern === undefined
+      ? project.getSourceFiles()
+      : typeof pattern === 'string'
+        ? project.getSourceFiles(pattern)
+        : project.getSourceFiles(pattern as readonly string[]);
   return files.filter((file) => !file.isFromExternalLibrary());
 }
 
