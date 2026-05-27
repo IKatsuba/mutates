@@ -1,6 +1,7 @@
 import { runCommand } from 'citty';
 
 import { OP_SCHEMAS } from '../../generated/op-schemas';
+import { CORE_OP_SCHEMAS } from '../../proto/core-op-schemas';
 import schema from './schema';
 
 /**
@@ -82,9 +83,23 @@ describe('mutates schema command', () => {
     }
   });
 
-  it('OP_SCHEMAS is in sync with what the command emits', async () => {
+  it('OP_SCHEMAS plus CORE_OP_SCHEMAS is in sync with what the command emits', async () => {
     const run = await capture(() => runCommand(schema, { rawArgs: [] }));
     const out = JSON.parse(run.stdout.trim()) as { ops: Array<{ op: string }> };
-    expect(out.ops.length).toBe(Object.keys(OP_SCHEMAS).length);
+    expect(out.ops.length).toBe(
+      Object.keys(OP_SCHEMAS).length + Object.keys(CORE_OP_SCHEMAS).length,
+    );
+  });
+
+  it('exposes a schema for the hand-written snapshot core op', async () => {
+    const run = await capture(() => runCommand(schema, { rawArgs: ['--op', 'snapshot'] }));
+    const entry = JSON.parse(run.stdout.trim()) as {
+      op: string;
+      category: string;
+      schema: { type: string };
+    };
+    expect(entry.op).toBe('snapshot');
+    expect(entry.category).toBe('core');
+    expect(entry.schema.type).toBe('object');
   });
 });

@@ -22,6 +22,11 @@ export default defineCommand({
       type: 'string',
       description: 'Project root (defaults to cwd)',
     },
+    tsconfig: {
+      type: 'string',
+      description:
+        'Path to a leaf tsconfig (resolved from cwd, or absolute). Overrides <root>/tsconfig.json',
+    },
     json: {
       type: 'boolean',
       description: 'Print the response as JSON instead of text',
@@ -33,7 +38,9 @@ export default defineCommand({
     try {
       const conn = await connectClient({ root });
       try {
-        const result = await conn.call('session.open', { root });
+        const params: { root: string; tsconfig?: string } = { root };
+        if (args.tsconfig) params.tsconfig = resolve(args.tsconfig);
+        const result = await conn.call('session.open', params);
         renderResult(result, args.json ? 'json' : 'text');
       } finally {
         await conn.close();

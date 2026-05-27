@@ -1,15 +1,25 @@
 import { randomUUID } from 'node:crypto';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve as resolvePath } from 'node:path';
 
-import { Project, resetActiveProject, setActiveProject, type SourceFile } from '@mutates/core';
+import { Project, resetActiveProject, setActiveProject, ts, type SourceFile } from '@mutates/core';
 
+import { ErrorCode } from '../proto/error-codes';
+import { RpcError } from '../proto/jsonrpc';
 import { FileStatCache } from './file-stat-cache';
 import { RefTable } from './ref-table';
 
 export interface SessionOptions {
   /** Absolute or relative project root. */
   root: string;
+  /**
+   * Optional absolute path to a tsconfig. When provided, overrides the
+   * default lookup of `<root>/tsconfig.json`. A solution-style tsconfig
+   * (empty `files`/`include` with non-empty `references`) is rejected —
+   * pass a leaf tsconfig instead. Callers (CLI / RPC) are expected to
+   * resolve any relative path before constructing a Session.
+   */
+  tsconfig?: string;
 }
 
 interface RecordedText {
@@ -41,15 +51,53 @@ export class Session {
     this.root = resolvePath(opts.root);
     this.openedAt = Date.now();
 
-    const tsconfigCandidate = join(this.root, 'tsconfig.json');
-    this.tsconfig = existsSync(tsconfigCandidate) ? tsconfigCandidate : null;
+    if (opts.tsconfig !== undefined) {
+      if (!existsSync(opts.tsconfig)) {
+        throw new RpcError(
+          ErrorCode.InvalidInput,
+          `session: tsconfig not found: ${opts.tsconfig}`,
+          {
+            tsconfig: opts.tsconfig,
+          },
+        );
+      }
+      this.tsconfig = opts.tsconfig;
+    } else {
+      const candidate = join(this.root, 'tsconfig.json');
+      this.tsconfig = existsSync(candidate) ? candidate : null;
+    }
 
     this.project = this.tsconfig ? new Project({ tsConfigFilePath: this.tsconfig }) : new Project();
 
-    if (!this.tsconfig) {
+    if (this.tsconfig) {
+      // ts-morph silently accepts solution-style tsconfigs (empty
+      // files/include with references) and loads 0 source files. Detect
+      // that explicitly and surface a useful error instead of a silently
+      // empty session.
+      if (this.project.getSourceFiles().length === 0 && isSolutionStyle(this.tsconfig)) {
+        throw new RpcError(
+          ErrorCode.InvalidInput,
+          `session: tsconfig is solution-style (empty files/include, has references). Pass --tsconfig pointing at a leaf tsconfig (e.g. tsconfig.lib.json) or a --root with no tsconfig.json.`,
+          { tsconfig: this.tsconfig },
+        );
+      }
+    } else {
       // No tsconfig — lazily pick up any TS sources under root so a
       // bare-directory project still has source files to operate on.
-      this.project.addSourceFilesAtPaths(join(this.root, '**/*.{ts,tsx}'));
+      // Skip vendor/build/scratch directories so the session doesn't
+      // balloon to thousands of irrelevant .d.ts files.
+      this.project.addSourceFilesAtPaths([
+        join(this.root, '**/*.{ts,tsx}'),
+        `!${join(this.root, '**/node_modules/**')}`,
+        `!${join(this.root, '**/dist/**')}`,
+        `!${join(this.root, '**/build/**')}`,
+        `!${join(this.root, '**/out/**')}`,
+        `!${join(this.root, '**/.next/**')}`,
+        `!${join(this.root, '**/.nx/**')}`,
+        `!${join(this.root, '**/.git/**')}`,
+        `!${join(this.root, '**/tmp/**')}`,
+        `!${join(this.root, '**/coverage/**')}`,
+      ]);
     }
 
     this.refs = new RefTable();
@@ -118,5 +166,33 @@ export class Session {
       if (sf.getFullText() !== recorded.text) dirty.push(file);
     }
     return dirty;
+  }
+}
+
+/**
+ * Heuristic: a tsconfig is "solution-style" when it declares no files
+ * itself (both `files` and `include` absent or empty) but lists project
+ * `references`. Such configs delegate compilation to referenced
+ * sub-projects and load 0 source files in ts-morph's default mode.
+ *
+ * Uses `ts.parseConfigFileTextToJson` so JSONC comments and trailing
+ * commas are handled the same way `tsc` would handle them.
+ */
+function isSolutionStyle(tsconfigPath: string): boolean {
+  try {
+    const raw = readFileSync(tsconfigPath, 'utf8');
+    const parsed = ts.parseConfigFileTextToJson(tsconfigPath, raw);
+    if (parsed.error || !parsed.config) return false;
+    const cfg = parsed.config as {
+      files?: unknown[];
+      include?: unknown[];
+      references?: unknown[];
+    };
+    const noFiles = !Array.isArray(cfg.files) || cfg.files.length === 0;
+    const noInclude = !Array.isArray(cfg.include) || cfg.include.length === 0;
+    const hasReferences = Array.isArray(cfg.references) && cfg.references.length > 0;
+    return noFiles && noInclude && hasReferences;
+  } catch {
+    return false;
   }
 }

@@ -1,5 +1,5 @@
 {
-  "count": 66,
+  "count": 70,
   "ops": [
     {
       "op": "addAccessors",
@@ -114,6 +114,14 @@
       "command": "src/commands/generated/source-files/add.ts"
     },
     {
+      "op": "addTypeAliases",
+      "verb": "add",
+      "category": "type-aliases",
+      "targetShape": "pattern",
+      "handler": "src/daemon/handlers/generated/type-aliases/add.ts",
+      "command": "src/commands/generated/type-aliases/add.ts"
+    },
+    {
       "op": "addVariables",
       "verb": "add",
       "category": "variables",
@@ -224,6 +232,14 @@
       "targetShape": "declarations-editor",
       "handler": "src/daemon/handlers/generated/params/edit.ts",
       "command": "src/commands/generated/params/edit.ts"
+    },
+    {
+      "op": "editTypeAliases",
+      "verb": "edit",
+      "category": "type-aliases",
+      "targetShape": "declarations-editor",
+      "handler": "src/daemon/handlers/generated/type-aliases/edit.ts",
+      "command": "src/commands/generated/type-aliases/edit.ts"
     },
     {
       "op": "editVariables",
@@ -410,6 +426,14 @@
       "command": "src/commands/generated/source-files/get.ts"
     },
     {
+      "op": "getTypeAliases",
+      "verb": "get",
+      "category": "type-aliases",
+      "targetShape": "query",
+      "handler": "src/daemon/handlers/generated/type-aliases/get.ts",
+      "command": "src/commands/generated/type-aliases/get.ts"
+    },
+    {
       "op": "getVariables",
       "verb": "get",
       "category": "variables",
@@ -520,6 +544,14 @@
       "targetShape": "nodes",
       "handler": "src/daemon/handlers/generated/params/remove.ts",
       "command": "src/commands/generated/params/remove.ts"
+    },
+    {
+      "op": "removeTypeAliases",
+      "verb": "remove",
+      "category": "type-aliases",
+      "targetShape": "nodes",
+      "handler": "src/daemon/handlers/generated/type-aliases/remove.ts",
+      "command": "src/commands/generated/type-aliases/remove.ts"
     },
     {
       "op": "removeVariables",

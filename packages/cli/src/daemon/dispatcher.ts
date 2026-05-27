@@ -139,7 +139,8 @@ function errorResponse(
 
 const sessionOpenHandler: Handler = ({ manager }, params) => {
   const root = readStringParam(params, 'root', 'session.open');
-  const session = manager.open(root);
+  const tsconfig = readOptionalStringParam(params, 'tsconfig', 'session.open');
+  const session = manager.open(root, tsconfig);
   return {
     sessionId: session.id,
     tsconfig: session.tsconfig,
@@ -171,6 +172,19 @@ function readStringParam(params: unknown, key: string, method: string): string {
     throw new RpcErrorClass(
       ErrorCode.InvalidParams,
       `${method}: missing or invalid '${key}' param`,
+    );
+  }
+  return value;
+}
+
+function readOptionalStringParam(params: unknown, key: string, method: string): string | undefined {
+  if (params === null || typeof params !== 'object') return undefined;
+  const value = (params as Record<string, unknown>)[key];
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new RpcErrorClass(
+      ErrorCode.InvalidParams,
+      `${method}: invalid '${key}' param (expected non-empty string)`,
     );
   }
   return value;

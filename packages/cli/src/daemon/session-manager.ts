@@ -35,8 +35,8 @@ export class SessionManager {
     this.onIdle = opts.onIdle ?? (() => undefined);
   }
 
-  open(root: string): Session {
-    const session = new Session({ root });
+  open(root: string, tsconfig?: string): Session {
+    const session = new Session({ root, tsconfig });
     this.sessions.set(session.id, session);
     this.touch();
     return session;

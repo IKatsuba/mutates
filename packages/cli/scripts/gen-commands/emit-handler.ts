@@ -56,14 +56,14 @@ function renderHandlerBody(c: Classified): string {
   return session.withActiveProject(() => {
     const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
     const result = fn(file, p.data);
-    return { ok: true, result };
+    return result;
   });`;
     case 'query':
       return `  return session.withActiveProject(() => {
     const query = (p.target?.filter ?? p.data ?? undefined) as never;
     const fn = ${c.coreName} as unknown as (q?: unknown) => unknown;
     const result = fn(query);
-    return { ok: true, result: mintNodeRefs(session, result as unknown) };
+    return mintNodeRefs(session, result as unknown);
   });`;
     case 'nodes':
       return `  return session.withActiveProject(() => {
@@ -77,7 +77,7 @@ function renderHandlerBody(c: Classified): string {
     }
     const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
     const result = fn(declarations, p.data);
-    return { ok: true, result };
+    return result;
   });`;
     case 'declarations-editor':
       return `  return session.withActiveProject(() => {
@@ -93,12 +93,12 @@ function renderHandlerBody(c: Classified): string {
     const editor = (structure: Record<string, unknown>) => ({ ...structure, ...overrides });
     const fn = ${c.coreName} as unknown as (...args: unknown[]) => unknown;
     const result = fn(declarations, editor);
-    return { ok: true, result };
+    return result;
   });`;
     case 'no-params':
       return `  return session.withActiveProject(() => {
     const result = (${c.coreName} as () => unknown)();
-    return { ok: true, result };
+    return result;
   });`;
   }
 }
